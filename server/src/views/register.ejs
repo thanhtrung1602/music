@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      .container {
+        padding-top: 100px;
+      }
+      .form-signin {
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+      }
+    </style>
+  </head>
+
+  <body class="bg-light">
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <form class="form-signin" action="register" method="post">
+          <h1 class="h3 mb-3 font-weight-normal text-center">Đăng ký</h1>
+          <!-- Username input -->
+          <label for="inputUsername" class="visually-hidden">Username</label>
+          <input type="text" name="username" id="inputUsername" class="form-control mb-2" placeholder="Username" required autofocus>
+
+          <!-- Email input -->
+          <label for="inputEmail" class="visually-hidden">Email</label>
+          <input type="email" name="email" id="inputEmail" class="form-control mb-2" placeholder="Email" required autofocus>
+          
+          <!-- Password input -->
+          <label for="inputPassword" class="visually-hidden">Mật khẩu</label>
+          <input type="password" name="password" id="inputPassword" class="form-control mb-3" placeholder="Mật khẩu" required>
+          
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Đăng nhập</button>
+          <p class="mt-5 mb-3 text-muted text-center">© 2024</p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script >
+    const logApi ='http://localhost:3000/api/auth/register';
+    function handleForm(e)  {
+      e.preventDefault();
+      const data = {
+        username: document.getElementById('inputUsername').value,
+        email: document.getElementById('inputEmail').value,
+        password: document.getElementById('inputPassword').value,
+      }
+      axios.post(logApi, data)
+        .then((response) => location.href  = 'http://localhost:3000/api/auth/login_')
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  </script>
+  </body>
+</html>
