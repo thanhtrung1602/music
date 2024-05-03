@@ -11,18 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Track.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'})
     }
   }
   Track.init({
     track_name: DataTypes.STRING,
     sound: DataTypes.STRING,
     image: DataTypes.STRING,
-    date: DataTypes.DATE,
     description: DataTypes.STRING,
     user_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Track',
+    tableName: 'tracks',
   });
   return Track;
 };

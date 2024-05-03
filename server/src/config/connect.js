@@ -1,6 +1,3 @@
-'use strict';
-
-const mysql = require('mysql');
 const dotenv = require('dotenv');
 dotenv.config();
 const { Sequelize } = require('sequelize');
@@ -20,4 +17,7 @@ const connect = async () => {
     }
 }
 
-module.exports = connect;
+module.exports = { 
+    connect,
+    sequelize
+}

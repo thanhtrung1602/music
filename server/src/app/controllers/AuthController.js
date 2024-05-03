@@ -1,4 +1,6 @@
 const userService = require("../../service/userService.js");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 class AuthController {
     async register(req, res) {
         const { username, email, password } =  req.body;
@@ -35,7 +37,6 @@ class AuthController {
                 });
             };
             const  response =  await userService.loginUser(req.body);
-            console.log(response)
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
@@ -45,6 +46,20 @@ class AuthController {
             })
         }
     };
+
+    getToken(req, res) {
+        const token = req.headers.authorization.split(' ')[1]; 
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function(err, decodedToken) {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid token' });
+            }
+            res.json({
+                id: decodedToken.id,
+                username: decodedToken.username
+            });
+        });
+    }
 
     getLogin(req, res) {
         return res.render('login');

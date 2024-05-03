@@ -1,9 +1,12 @@
 const userService = require("../../service/userService.js");
 
 class UsersController {
-    getAllUser(req, res) {
-        const sql  =  'SELECT * FROM user';
+    getUser(req, res) { 
         return userService.getAllUser(sql, res);
+    }
+
+    getTokenUser(req, res) {
+        return res.render('user')
     }
 }
 

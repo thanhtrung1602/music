@@ -8,6 +8,9 @@ router.get('/register_', authController.getRegister)
 // GET LOGIN
 router.get('/login_', authController.getLogin)
 
+//GET JSON LOGIN
+router.get('/log', authController.getToken)
+
 //  REGISTER
 router.post('/register', authController.register);
 

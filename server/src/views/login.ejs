@@ -52,7 +52,10 @@
           password: document.getElementById('inputPassword').value,
         }
         axios.post(logApi, data)
-          .then((response) =>  console.log(response.data))
+          .then((response) => {
+            localStorage.setItem('token', response.data.accessToken);
+            location.href = 'http://localhost:3000/api/users/userLog';
+          })
           .catch(err => {
             console.log(err)
           })

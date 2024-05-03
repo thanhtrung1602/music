@@ -18,11 +18,14 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      date: {
-        type: Sequelize.DATE
-      },
       description: {
         type: Sequelize.STRING
+      },
+      createdAt: {
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        type: Sequelize.DATE
       },
       user_id: {
         type: Sequelize.INTEGER

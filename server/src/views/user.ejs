@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script >
+    const logApi ='http://localhost:3000/api/auth/log';
+    const trackAPI = `http://localhost:3000/api/track/getTrack`
+    const h2 = document.querySelector('h2');
+    function getUser() {
+        axios.get(logApi, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.token}`
+            }
+        })
+        .then((response) =>  {
+            const id = response.data.id;
+            const name = response.data.username
+            console.log(id)
+            axios.get(trackAPI + '/' + id)
+                .then(response => {
+                    const data = response.data.map(music => {
+                        return `
+                            <div class="music">
+                                <p>${music.track_name}</p>
+                                <p>
+                                    <audio controls>
+                                        <source src="${music.sound}" type="audio/ogg">
+                                    </audio>
+                                </p>
+                            </div>
+                        `
+                    }).join('');
+                    document.getElementById('app').innerHTML = `
+                        <div class="musics">
+                            <h2>${name}</h2>
+                            ${data}
+                        </div>
+                    `
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    getUser();
+    </script>
+</html>

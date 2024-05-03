@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../models/index');
 const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
-
+require('dotenv').config()
 function getAllUser(sql, res) {
     connect.query(sql, (err, result) => {
         return err ? res.json(err) : res.json(result);
@@ -35,13 +35,24 @@ async function createNewService({ username, email, password }) {
 
 async function loginUser({ email, password }) {
     try {
+        //Authentication
+
         const  user =  await db.User.findOne({
             where: { email },
             raw: true
         });
         const { password, ...other } = user
         const isCorrectPass = user && bcrypt.compareSync(password, user.password);
-        return { ...other};
+        //Authorization
+        const accessToken = jwt.sign(
+            {
+                id: user.id,
+                username: user.username
+            }, 
+            process.env.ACCESS_TOKEN_SECRET, 
+            { expiresIn: '1d' }
+        );
+        return { ...other, accessToken};
     } catch (error) {
         console.error('User not found.', error);
         throw error;
