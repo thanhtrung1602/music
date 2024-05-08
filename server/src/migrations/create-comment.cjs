@@ -9,14 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      date: {
-        type: Sequelize.DATE
-      },
       title: {
         type: Sequelize.STRING
       },
       track_id: {
+        type: Sequelize.INTEGER
+      },
+      createdAt: {
         type: Sequelize.DATE
+      },
+      updatedAt: {
+        type: Sequelize.DATE
+      },
+      user_id: {
+        type: Sequelize.INTEGER
       },
     });
   },

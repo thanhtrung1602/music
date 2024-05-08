@@ -11,15 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Comment.belongsTo(models.Track, {foreignKey: 'track_id', targetKey: 'id', as: 'TrackData'}),
+      Comment.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'UserData'})
     }
   }
   Comment.init({
-    date: DataTypes.DATE,
     title: DataTypes.STRING,
-    track_id: DataTypes.INTEGER
+    track_id: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Comment',
+    tableName: 'comment',
   });
   return Comment;
 };

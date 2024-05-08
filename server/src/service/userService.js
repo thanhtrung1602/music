@@ -19,7 +19,7 @@ async function createNewService({ username, email, password }) {
     const hashPass = hashUserPassword(password);
     try {
         const user = await db.User.findOrCreate({
-            where: { email },
+            where: { username, email },
             defaults: {
                 username,
                 email,
@@ -37,11 +37,17 @@ async function loginUser({ email, password }) {
     try {
         //Authentication
 
-        const  user =  await db.User.findOne({
+        const user =  await db.User.findOne({
             where: { email },
             raw: true
         });
-        const { password, ...other } = user
+
+        console.log(user)
+        if (!user) {
+            console.error('User not found');
+            throw new Error('User not found');
+        }
+        console.log(password)
         const isCorrectPass = user && bcrypt.compareSync(password, user.password);
         //Authorization
         const accessToken = jwt.sign(
@@ -52,7 +58,7 @@ async function loginUser({ email, password }) {
             process.env.ACCESS_TOKEN_SECRET, 
             { expiresIn: '1d' }
         );
-        return { ...other, accessToken};
+        return { user, accessToken};
     } catch (error) {
         console.error('User not found.', error);
         throw error;
@@ -64,3 +70,4 @@ module.exports = {
     loginUser,
     getAllUser,
 };
+

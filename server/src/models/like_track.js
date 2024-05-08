@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Like_track.belongsTo(models.Track, {foreignKey: 'track_id', targetKey: 'id', as: 'TrackData'});
+      Like_track.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'UserData'})
     }
   }
   Like_track.init({
@@ -19,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Like_track',
+    tableName: 'like_track'
   });
   return Like_track;
 };
