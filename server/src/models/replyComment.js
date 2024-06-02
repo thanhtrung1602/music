@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Comment extends Model {
+  class ReplyComment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of the Sequelize lifecycle.
@@ -11,18 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Comment.belongsTo(models.Track, {foreignKey: 'track_id', targetKey: 'id', as: 'TrackData'}),
-      Comment.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'})
+      ReplyComment.belongsTo(models.Comment, {foreignKey: 'comment_id', targetKey: 'id', as: 'commentData'}),
+      ReplyComment.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'})
     }
   }
-  Comment.init({
-    title: DataTypes.STRING,
-    track_id: DataTypes.INTEGER,
+  ReplyComment.init({
+    reply: DataTypes.STRING,
+    comment_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Comment',
-    tableName: 'comment',
+    modelName: 'ReplyComment',
+    tableName: 'replyComment',
   });
-  return Comment;
+  return ReplyComment;
 };

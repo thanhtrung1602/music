@@ -1,4 +1,4 @@
-const userService = require("../../service/userService.js");
+const userService = require("../../service/authService.js");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 class AuthController {
@@ -13,10 +13,7 @@ class AuthController {
                 })
             }
             const response = await userService.createNewService(req.body);
-            if(response) {
-                return res.send('email is register!')
-            }
-            return res.redirect('login_')
+            return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
                 EM: 'error messega',

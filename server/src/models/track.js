@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Track.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'})
+      Track.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'});
+      Track.belongsTo(models.Categories, {foreignKey: 'category_id', targetKey: 'id', as: 'categoryData'});
+      Track.belongsTo(models.Genre, {foreignKey: 'genre_id', targetKey: 'id', as: 'genreData'});
     }
   }
   Track.init({
@@ -20,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     image: DataTypes.STRING,
     description: DataTypes.STRING,
     user_id: DataTypes.INTEGER,
+    category_id: DataTypes.INTEGER,
+    genre_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Track',

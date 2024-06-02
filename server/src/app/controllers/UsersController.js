@@ -1,4 +1,4 @@
-const userService = require("../../service/userService.js");
+const userService = require("../../service/authService.js");
 const { Sequelize } = require('sequelize');
 const db = require('../../models/index');
 class UsersController {
@@ -10,26 +10,46 @@ class UsersController {
         return res.render('user')
     }
 
-    renderSearch(req, res) {
-        return res.render('search')
+    async getAllUser(req, res) {
+        try {
+            const users = await db.User.findAll();
+            const usersWithoutPassword = users.map(
+                user => {
+                    const { password, ...userWithoutPassword } = user.get({plain: true});
+                    return userWithoutPassword;
+                }
+            )
+            return res.status(200).json(usersWithoutPassword);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
     }
 
-    async getOneUser(req, res) {
-        const key = req.params.key;
+    async getOneUserTrack(req, res) {
+        const id = req.params.id;
         try {
-            const getOneUser = await db.User.findOne({
+            const userId = await db.User.findOne({
                 where: {
-                    username: key
+                    id: id
                 }
             });
+            return res.status(200).json(userId);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
 
-            const getOneTrack = await db.Track.findOne({
+    async getUserDetail(req, res) {
+        const id = req.params.id;
+        try {
+            const getUserDetail = await db.User.findOne({
                 where: {
-                    track_name: key
+                    id: id
                 }
-            });
-
-            return res.status(200).json({getOneUser, getOneTrack})
+            })
+            return res.status(200).json(getUserDetail);
         } catch (error) {
             console.error('>>> co loi ', error);
             return res.status(500).json({ Error: '>>> co loi ', err: error.message });

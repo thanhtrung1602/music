@@ -48,7 +48,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script >
-    const logApi ='http://localhost:3000/api/auth/register';
+    const logApi ='http://localhost:3000/api/v1/auth/register';
     function handleForm(e)  {
       e.preventDefault();
       const data = {
@@ -57,7 +57,7 @@
         password: document.getElementById('inputPassword').value,
       }
       axios.post(logApi, data)
-        .then((response) => location.href  = 'http://localhost:3000/api/auth/login_')
+        .then((response) => location.href  = 'http://localhost:3000/api/v1/auth/login_')
         .catch(err => {
           console.log(err)
         })

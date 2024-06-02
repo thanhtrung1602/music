@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Like_track extends Model {
+  class Listening extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,17 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Like_track.belongsTo(models.Track, {foreignKey: 'track_id', targetKey: 'id', as: 'trackData'});
-      Like_track.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'});
+      Listening.belongsTo(models.Track, {foreignKey: 'track_id', targetKey: 'id', as: 'trackData'});
+      Listening.belongsTo(models.User, {foreignKey: 'user_id', targetKey: 'id', as: 'userData'});
     }
   }
-  Like_track.init({
+  Listening.init({
     track_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Like_track',
-    tableName: 'like_track',
+    modelName: 'Listening',
+    tableName: 'listening',
   });
-  return Like_track;
+  return Listening;
 };

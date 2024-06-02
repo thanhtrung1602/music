@@ -3,12 +3,16 @@ const db = require('../models/index');
 
 
 
-async function upload({track_name, user_id }, fileSound) {
+async function upload({track_name, description, user_id, category_id, genre_id }, fileSound, fileImage) {
     try {
         const track = await db.Track.create({
-            sound: fileSound,
             track_name,
-            user_id
+            sound: fileSound,
+            image: fileImage,
+            description,
+            user_id,
+            category_id,
+            genre_id
         });
         return { track };
     } catch (error) {

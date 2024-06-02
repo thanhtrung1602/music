@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const cors = require('cors')
 const route = require('./src/routes/index.js');
 
 const app = express();
@@ -13,6 +13,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'src/views'))
 app.set('view engine', 'ejs');
 
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

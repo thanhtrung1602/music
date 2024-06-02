@@ -18,6 +18,15 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      city: {
+        type: Sequelize.STRING
+      },
+      country: {
+        type: Sequelize.STRING
+      },
+      bio: {
+        type: Sequelize.STRING
+      },
     });
   },
   async down(queryInterface, Sequelize) {

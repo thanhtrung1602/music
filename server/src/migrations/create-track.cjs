@@ -28,7 +28,13 @@ module.exports = {
         type: Sequelize.DATE
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+      },
+      category_id: {
+        type: Sequelize.INTEGER,
+      },
+      genre_id: {
+        type: Sequelize.INTEGER,
       },
     });
   },

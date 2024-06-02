@@ -36,6 +36,9 @@ async function initDb() {
     .map(file => {
       const filePath = path.join(__dirname, file);
       const model = require(filePath);
+      if (typeof model !== 'function') {
+        throw new Error(`"model" exported from ${filePath} is not a function. Check the model file for errors.`);
+      }
       return model(sequelize, Sequelize.DataTypes);
     });
   
@@ -53,6 +56,8 @@ async function initDb() {
   db.Sequelize = Sequelize;
 }
 
-initDb();
+(async () => {
+  await initDb();
+})();
 
 module.exports = db;
