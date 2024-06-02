@@ -27,12 +27,6 @@ router.get('/getAllLikeTrack/:id', trackController.getAllLikeTrack);
 
 router.get('/getOneTrack/:id', trackController.getOneTrack);
 
-router.post('/postCommentTrack/', trackController.postCommentTrack);
-
-router.get('/getCommentTrackCount/:id', trackController.getCommentTrackCount);
-
-router.get('/getAllCommentTrack/:id', trackController.getAllCommentTrack);
-
 router.get('/getTrackGenre/:id', trackController.getTrackGenre)
 
 router.get('/getTrackCount/:id', trackController.getTrackCount);

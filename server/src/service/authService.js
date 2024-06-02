@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const db = require('../models/index');
 const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
-require('dotenv').config()
+require('dotenv').config();
+
 function getAllUser(sql, res) {
     connect.query(sql, (err, result) => {
         return err ? res.json(err) : res.json(result);
