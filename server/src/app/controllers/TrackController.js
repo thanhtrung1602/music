@@ -269,7 +269,7 @@ class TrackController {
   }
 
   async search(req, res) {
-    const { query } = req.body;
+    const { query } = req.params;
     try {
       if (!query) {
         return res.status(404).json(null);

@@ -279,6 +279,7 @@ async function getTrackGenre(id) {
 }
 
 async function searchEveryThing(query) {
+  
   const tracksPromise = db.Track.findAll({
     where: {
       track_name: {
@@ -287,7 +288,17 @@ async function searchEveryThing(query) {
     },
   });
 
-  return { tracksPromise };
+  const usersPromise = db.User.findAll({
+    where: {
+      username: {
+        [Op.like]: `%${query}%`,
+      },
+    },
+  });
+
+  const [users, tracks] = await Promise.all([usersPromise, tracksPromise]);
+
+  return {users, tracks};
 }
 
 module.exports = {
