@@ -5,12 +5,6 @@ const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 require('dotenv').config();
 
-function getAllUser(sql, res) {
-    connect.query(sql, (err, result) => {
-        return err ? res.json(err) : res.json(result);
-    });
-}
-
 function hashUserPassword(password) {
     const hashPassword = bcrypt.hashSync(password, salt);
     return hashPassword;
@@ -69,6 +63,5 @@ async function loginUser({ email, password }) {
 module.exports = {
     createNewService,
     loginUser,
-    getAllUser,
 };
 

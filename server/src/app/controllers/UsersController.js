@@ -1,10 +1,4 @@
-const userService = require("../../service/authService.js");
-const { Sequelize } = require('sequelize');
-const db = require('../../models/index');
-class UsersController {
-    getUser(req, res) { 
-        return userService.getAllUser(sql, res);
-    }
+const userService = require("../../service/userService.js");class UsersController {
 
     getTokenUser(req, res) {
         return res.render('user')
@@ -12,29 +6,8 @@ class UsersController {
 
     async getAllUser(req, res) {
         try {
-            const users = await db.User.findAll();
-            const usersWithoutPassword = users.map(
-                user => {
-                    const { password, ...userWithoutPassword } = user.get({plain: true});
-                    return userWithoutPassword;
-                }
-            )
-            return res.status(200).json(usersWithoutPassword);
-        } catch (error) {
-            console.error('>>> co loi ', error);
-            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
-        }
-    }
-
-    async getOneUserTrack(req, res) {
-        const id = req.params.id;
-        try {
-            const userId = await db.User.findOne({
-                where: {
-                    id: id
-                }
-            });
-            return res.status(200).json(userId);
+            const user = await userService.getAllUser();
+            return res.status(200).json(user);
         } catch (error) {
             console.error('>>> co loi ', error);
             return res.status(500).json({ Error: '>>> co loi ', err: error.message });
@@ -44,12 +17,82 @@ class UsersController {
     async getUserDetail(req, res) {
         const id = req.params.id;
         try {
-            const getUserDetail = await db.User.findOne({
-                where: {
-                    id: id
-                }
-            })
-            return res.status(200).json(getUserDetail);
+            if(!id)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const user = await userService.getUserDetail(id)
+            return res.status(200).json(user);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
+
+    async following(req, res) {
+        const { followerId, followingId } = req.body;
+        try {
+            if(!followerId || !followingId)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const follow = await userService.follows(req.body);
+            return res.status(200).json(follow)
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
+    // Số lượng người đang theo dõi tôi
+    async followerUserCount(req, res) {
+        const id = req.params.id;
+        try {
+            if(!id)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const followerUser = await userService.followerUserCount(id);
+            return res.status(200).json(followerUser);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
+    // Số lượng người mà tôi đang theo dõi
+    async followingUserCount(req, res) {
+        const id = req.params.id;
+        try {
+            if(!id)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const followingUser = await userService.followingUserCount(id);
+            return res.status(200).json(followingUser);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
+
+    // lấy người đang theo dõi tôi
+    async getFollowerUser(req, res) {
+        const id = req.params.id;
+        try {
+            if(!id)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const followerUser = await userService.getFollowerUser(id);
+            return res.status(200).json(followerUser);
+        } catch (error) {
+            console.error('>>> co loi ', error);
+            return res.status(500).json({ Error: '>>> co loi ', err: error.message });
+        }
+    }
+    // lấy người mà tôi đang theo dõi
+    async getFollowingUser(req, res) {
+        const id = req.params.id;
+        try {
+            if(!id)  {
+                return res.status(400).json({ EM: 'missing', EC: '-1', DT: '' });
+            }
+            const followingUser = await userService.getFollowingUser(id);
+            return res.status(200).json(followingUser);
         } catch (error) {
             console.error('>>> co loi ', error);
             return res.status(500).json({ Error: '>>> co loi ', err: error.message });

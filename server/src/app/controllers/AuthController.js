@@ -1,4 +1,4 @@
-const userService = require("../../service/authService.js");
+const authService = require("../../service/authService.js");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 class AuthController {
@@ -12,7 +12,7 @@ class AuthController {
                     DT: '' 
                 })
             }
-            const response = await userService.createNewService(req.body);
+            const response = await authService.createNewService(req.body);
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
@@ -33,7 +33,7 @@ class AuthController {
                     DT: '' 
                 });
             };
-            const  response =  await userService.loginUser(req.body);
+            const  response =  await authService.loginUser(req.body);
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
