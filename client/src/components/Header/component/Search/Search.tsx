@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-function Search() {
+import { ISearchProps } from "~/types/search";
+function Search(props: ISearchProps) {
   return (
     <form className="w-full rounded bg-[#e5e5e5]">
       <input
@@ -10,8 +10,8 @@ function Search() {
         name=""
         id=""
       />
-      <button type="submit" className="px-2">
-        <FontAwesomeIcon icon={faSearch} />{" "}
+      <button type="submit" className="px-2 text-[#111]">
+        <FontAwesomeIcon icon={props.search} />
       </button>
     </form>
   );

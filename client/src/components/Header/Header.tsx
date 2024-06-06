@@ -5,6 +5,7 @@ import {
   faBell,
   faEnvelope,
   faEllipsis,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import Search from "~/components/Header/component/Search/Search";
 function Header() {
@@ -39,13 +40,19 @@ function Header() {
           </div>
         </div>
         <div className="ml-3">
-          <Search />
+          <Search search={faSearch} />
         </div>
         <nav>
           <ul className="ml-2 flex items-center gap-1">
-            <li className="px-2 text-[#ff5500]">Try Next Pro</li>
-            <li className="px-2">For Artists</li>
-            <li className="px-2">Upload</li>
+            <li className="px-2 text-[#ff5500]">
+              <a href="">Try Next Pro</a>
+            </li>
+            <li className="px-2">
+              <a href="">For Artists</a>
+            </li>
+            <li className="px-2">
+              <a href="">Upload</a>
+            </li>
           </ul>
         </nav>
         <div className="flex items-center gap-2 pl-2">
