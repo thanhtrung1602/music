@@ -3,7 +3,7 @@ const trackController = require("../app/controllers/TrackController.js");
 const uploadCloud = require("../config/cloudinary.js");
 const router = express.Router();
 
-router.get("/search/:query", trackController.search);
+router.get("/search/", trackController.search);
 
 router.get("/getGenre", trackController.getGenre);
 

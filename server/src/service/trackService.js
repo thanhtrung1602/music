@@ -278,12 +278,12 @@ async function getTrackGenre(id) {
   }
 }
 
-async function searchEveryThing(query) {
+async function searchEveryThing(q) {
   
   const tracksPromise = db.Track.findAll({
     where: {
       track_name: {
-        [Op.like]: `%${query}%`,
+        [Op.like]: `%${q}%`,
       },
     },
   });
@@ -291,7 +291,7 @@ async function searchEveryThing(query) {
   const usersPromise = db.User.findAll({
     where: {
       username: {
-        [Op.like]: `%${query}%`,
+        [Op.like]: `%${q}%`,
       },
     },
   });
