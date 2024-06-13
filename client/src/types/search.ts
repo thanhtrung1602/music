@@ -6,6 +6,6 @@ export interface ISearchProps {
 }
 
 export interface ISearch {
-  users: User;
-  tracks: ITrack; 
+  users: User[];
+  tracks: ITrack[]; 
 }
