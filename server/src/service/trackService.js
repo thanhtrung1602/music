@@ -1,5 +1,4 @@
 const { Op } = require("sequelize");
-const connect = require("../config/connect");
 const db = require("../models/index");
 
 async function upload(
@@ -279,7 +278,6 @@ async function getTrackGenre(id) {
 }
 
 async function searchEveryThing(q) {
-  
   const tracksPromise = db.Track.findAll({
     where: {
       track_name: {
@@ -298,7 +296,19 @@ async function searchEveryThing(q) {
 
   const [users, tracks] = await Promise.all([usersPromise, tracksPromise]);
 
-  return {users, tracks};
+  return { users, tracks };
+}
+
+async function listen(track_id) {
+  try {
+    const track = await db.Track.findByPk(track_id);
+    track.listen_count = track.listen_count + 1;
+    await track.save();
+    return track;
+  } catch (error) {
+    console.error("Error findByPk track:", error);
+    throw error;
+  }
 }
 
 module.exports = {
@@ -320,4 +330,5 @@ module.exports = {
   getGenre,
   getTrackGenre,
   searchEveryThing,
+  listen,
 };

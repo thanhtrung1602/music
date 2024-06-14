@@ -134,38 +134,6 @@ class TrackController {
     }
   }
 
-  async getAllListen(req, res) {
-    const id = req.params.id;
-    try {
-      if (!id) {
-        return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
-      }
-      const getAllListening = await trackService.getAllListen(id);
-      return res.status(200).json(getAllListening);
-    } catch (error) {
-      console.error(">>> co loi ", error);
-      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
-    }
-  }
-
-  async postListen(req, res) {
-    const { track_id, user_id } = req.body;
-    try {
-      if (!track_id || !user_id) {
-        return res.status(400).json({
-          EM: "missing",
-          EC: "-1",
-          DT: "",
-        });
-      }
-      const postListen = await trackService.postListen(req.body);
-      return res.status(200).json(postListen);
-    } catch (error) {
-      console.error(">>> co loi ", error);
-      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
-    }
-  }
-
   async createAlbums(req, res) {
     const { album_name, image, user_id } = req.body;
     try {
@@ -276,6 +244,20 @@ class TrackController {
       }
       const search = await trackService.searchEveryThing(query);
       return res.status(200).json(search);
+    } catch (error) {
+      console.error(">>> co loi ", error);
+      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
+    }
+  }
+
+  async listen(req, res) {
+    const trackId = req.params.trackId;
+    try {
+      if (!trackId) {
+        return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
+      }
+      const listen = await trackService.listen(trackId);
+      return res.status(200).json(listen);
     } catch (error) {
       console.error(">>> co loi ", error);
       return res.status(500).json({ Error: ">>> co loi ", err: error.message });

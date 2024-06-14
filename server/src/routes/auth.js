@@ -1,20 +1,23 @@
-const express = require('express');
-const authController = require('../app/controllers/AuthController.js');
+const express = require("express");
+const authController = require("../app/controllers/AuthController.js");
 const router = express.Router();
 
+// refresh Token
+router.post("/refreshToken", authController.refreshToken);
+
 // GET REGISTER
-router.get('/register_', authController.getRegister)
+router.get("/register_", authController.getRegister);
 
 // GET LOGIN
-router.get('/login_', authController.getLogin)
+router.get("/login_", authController.getLogin);
 
 //GET JSON LOGIN
-router.get('/log', authController.getToken)
+router.get("/log", authController.getToken);
 
 //  REGISTER
-router.post('/register', authController.register);
+router.post("/register", authController.register);
 
 //  LOGIN
-router.post('/login', authController.login)
+router.post("/login", authController.login);
 
 module.exports = router;
