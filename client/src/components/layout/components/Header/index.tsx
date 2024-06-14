@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HeadlessTippy from "@tippyjs/react/headless";
 import {
@@ -20,26 +20,43 @@ type Users = {
   name: string;
 };
 
+const users = [
+  { id: 1, image: icon.profile, name: "Profile" },
+  { id: 2, image: icon.heart, name: "Likes" },
+  { id: 3, image: icon.playlist, name: "Playlists" },
+  { id: 4, image: icon.follow, name: "Following" },
+  { id: 5, image: icon.follow, name: "Who to follow" },
+  { id: 6, image: icon.track, name: "Tracks" },
+];
+
+const contacts = [
+  { id: 1, name: "About us" },
+  { id: 2, name: "Legal" },
+  { id: 3, name: "Copyright" },
+  { id: 4, name: "Mobile apps" },
+  { id: 5, name: "For Creators" },
+  { id: 6, name: "Blog" },
+  { id: 7, name: "Jobs" },
+  { id: 8, name: "Developers" },
+  { id: 9, name: "Support" },
+  { id: 10, name: "Keyboard shortcuts" },
+  { id: 11, name: "Subscription" },
+  { id: 12, name: "Settings" },
+];
+
 function Header() {
-  const users = [
-    { id: 1, image: icon.profile, name: "Profile" },
-    { id: 2, image: icon.heart, name: "Likes" },
-    { id: 3, image: icon.playlist, name: "Playlists" },
-    { id: 4, image: icon.follow, name: "Following" },
-    { id: 5, image: icon.follow, name: "Who to follow" },
-    { id: 6, image: icon.track, name: "Tracks" },
-  ];
-
   const [show, setShow] = useState(false);
-  const refShow = useRef();
+  const [contact, setContact] = useState(false);
+  const refShow = useRef<HTMLDivElement>(null);
+  const refContact = useRef<HTMLDivElement>(null);
 
-  function handleSearch() {
-    if (show) {
-      refShow.current.style.backgroundColor = "#000";
-      // refShow.current.style.backgroundColor = "#333";
+  useEffect(() => {
+    if (refShow.current && refContact.current) {
+      refShow.current.style.backgroundColor = show ? "#111" : "#333";
+      refContact.current.style.backgroundColor = contact ? "#111" : "#333";
     }
-    setShow(true);
-  }
+  }, [show, contact]);
+
   const categories = ["Home", "Feed", "Library"];
 
   return (
@@ -78,10 +95,10 @@ function Header() {
             <li className="px-2 text-[#ff5500]">
               <a href="">Try Next Pro</a>
             </li>
-            <li className="px-2">
+            <li className="px-2 hover:text-[#fff]">
               <a href="">For Artists</a>
             </li>
-            <li className="px-2">
+            <li className="px-2 hover:text-[#fff]">
               <a href="">Upload</a>
             </li>
           </ul>
@@ -101,7 +118,7 @@ function Header() {
                       <li className="" key={user.id}>
                         <a
                           href=""
-                          className="relative flex h-[32.8px] w-[133.4px] items-center py-2 pr-[10px]"
+                          className="relative flex h-[32.8px] w-[133.4px] items-center py-2 pr-[10px] hover:bg-[#f2f2f2]"
                         >
                           <img
                             className="block h-5 w-[34px]"
@@ -121,27 +138,70 @@ function Header() {
         >
           <div
             ref={refShow}
-            className="flex h-[46px] w-16 items-center gap-2 pl-2"
-            onClick={handleSearch}
+            className="flex h-[46px] w-16 cursor-pointer items-center gap-2 pl-2"
+            onClick={() => setShow(true)}
           >
             <img
               src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
               className="w-6 rounded-full"
               alt=""
             />
-            <FontAwesomeIcon icon={faChevronDown} />
+            <FontAwesomeIcon
+              className="hover:text-[#fff]"
+              icon={faChevronDown}
+            />
           </div>
         </HeadlessTippy>
         <div className="flex items-center justify-between pl-2 text-xl">
-          <span className="px-3">
-            <FontAwesomeIcon icon={faBell} />
+          <span className="flex h-[46px] w-[46px] items-center justify-center px-3">
+            <FontAwesomeIcon
+              className="cursor-pointer hover:text-[#fff]"
+              icon={faBell}
+            />
           </span>
-          <span className="px-4">
-            <FontAwesomeIcon icon={faEnvelope} />
+          <span className="flex h-[46px] w-[46px] items-center justify-center px-4">
+            <FontAwesomeIcon
+              className="cursor-pointer hover:text-[#fff]"
+              icon={faEnvelope}
+            />
           </span>
-          <span className="px-3 text-2xl">
-            <FontAwesomeIcon icon={faEllipsis} />
-          </span>
+          <HeadlessTippy
+            interactive
+            visible={contact}
+            render={(attrs) => (
+              <div
+                className="mt-[-9.5px] translate-x-[-62px] border border-solid border-[#ccc]"
+                {...attrs}
+              >
+                <ul className="w-[168.4px] text-xs font-semibold text-[#333]">
+                  {contacts.map((contact) => {
+                    return (
+                      <li key={contact.id}>
+                        <a
+                          href=""
+                          className="block h-[32.8px] px-[10px] py-2 hover:bg-[#f2f2f2]"
+                        >
+                          {contact.name}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+            onClickOutside={() => setContact(false)}
+          >
+            <span
+              ref={refContact}
+              className="flex h-[46px] w-[46px] items-center justify-center px-3 text-2xl leading-[1.5]"
+              onClick={() => setContact(true)}
+            >
+              <FontAwesomeIcon
+                className="cursor-pointer hover:text-[#fff]"
+                icon={faEllipsis}
+              />
+            </span>
+          </HeadlessTippy>
         </div>
       </div>
     </header>

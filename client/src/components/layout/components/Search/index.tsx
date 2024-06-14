@@ -1,39 +1,35 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HeadlessTippy from "@tippyjs/react/headless";
 import { faUser, faMusic } from "@fortawesome/free-solid-svg-icons";
 
 import { ISearch, ISearchProps } from "~/types/search";
-import instance from "~/services/customize-axios";
 import { ITrack } from "~/types/track";
 import { User } from "~/types/user";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
 import ResultSearch from "~/components/layout/components/ResultSearch";
+import { fetchSearch } from "~/Api";
 function Search(props: ISearchProps) {
   const [key, setKey] = useState("");
   const [hiddenSearch, setHiddenSearch] = useState(false);
   const [search, setSearch] = useState<ISearch>();
 
-  useEffect(() => {
-    instance
-      .get(`/tracks/search`, {
-        params: {
-          query: key,
-        },
-      })
-      .then((result) => {
-        setSearch(result.data);
-      })
-      .catch((err) => {
-        console.error("loi >>> ", err);
-      });
-  }, [key]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["search", key],
+    queryFn: () => fetchSearch(key),
+  });
 
   useEffect(() => {
+    setSearch(data);
     if (key === "") {
       setHiddenSearch(false);
     }
-  }, [key]);
+  }, [key, data]);
+
+  if (error) {
+    return <div>error{error.message}</div>;
+  }
 
   return (
     <>
@@ -46,6 +42,9 @@ function Search(props: ISearchProps) {
               {hiddenSearch && (
                 <ul className="bg bg-slate-950 text-[#ccc]">
                   <li className="bg-[#333] p-[6px]">Search for "{key}"</li>
+                  {isLoading && (
+                    <li className="bg-[#333] p-[6px]">Loading...</li>
+                  )}
                   {search?.users.map((user: User) => (
                     <ResultSearch
                       key={user.id}
@@ -81,7 +80,7 @@ function Search(props: ISearchProps) {
                 setHiddenSearch(true);
               }}
               className="h-7 w-[355px] rounded bg-[#e5e5e5] p-2 text-[#666] outline-none transition delay-300 ease-in-out focus:bg-[#fff]"
-              placeholder="Search"
+              placeholder="Search for artists, tracks"
               name=""
               id=""
               onFocus={() =>

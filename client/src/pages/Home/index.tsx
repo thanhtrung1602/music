@@ -1,7 +1,11 @@
 function Home() {
-    return (
-        <h2 className="mt-12">Home page</h2>
-    );
+  return (
+    <>
+      <div>
+        <div></div>
+      </div>
+    </>
+  );
 }
 
 export default Home;

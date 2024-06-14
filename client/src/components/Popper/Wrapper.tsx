@@ -1,10 +1,6 @@
 import { ReactNode } from "react";
 
-interface PopperWrapperProps {
-  children: ReactNode;
-}
-
-function Wrapper({ children }: PopperWrapperProps) {
+function Wrapper({ children }: { children: ReactNode }) {
   return <div className="w-full bg-[#fff]">{children}</div>;
 }
 
