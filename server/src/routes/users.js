@@ -4,6 +4,10 @@ const authController = require("../app/controllers/AuthController.js");
 
 const router = express.Router();
 
+router.get("/getCookie", authController.getCookie);
+
+router.get("/getUserToken", usersController.getUserToken);
+
 // Số lượng người mà tôi đang theo dõi
 router.get("/getFollowing/:id", usersController.getFollowingUser);
 

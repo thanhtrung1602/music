@@ -38,7 +38,7 @@ class AuthController {
       const { accessToken, user, refresh_token } = response;
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: false, // set to false if not using HTTPS
+        secure: true, // set to false if not using HTTPS
         sameSite: "Strict", // or 'Lax', depending on your requirements
       });
       return res.status(200).json(response);
@@ -70,9 +70,33 @@ class AuthController {
       res.json({
         id: user.id,
         username: user.username,
+        image: user.image,
       });
       req.user = user;
-      next();
+    });
+  }
+
+  getCookie(req, res, next) {
+    if (
+      !req.headers.accessToken ||
+      !req.headers.accessToken.startsWith("Bearer ")
+    ) {
+      return res
+        .status(401)
+        .json({ message: "No token provided or token is invalid" });
+    }
+    const token = req.headers.accessToken.split(" ")[1];
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token", err });
+      }
+      res.json({
+        id: user.id,
+        username: user.username,
+        image: user.image,
+      });
+      req.user = user;
     });
   }
 

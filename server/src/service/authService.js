@@ -56,17 +56,20 @@ async function loginUser({ email, password }) {
       throw new Error("User not found");
     }
     console.log(password);
+    console.log(user);
     const isCorrectPass = user && bcrypt.compareSync(password, user.password);
     //Authorization
 
     const accessToken = generateAccessToken({
       id: user.id,
       username: user.username,
+      image: user.image,
     });
 
     const refresh_token = generateRefreshToken({
       id: user.id,
       username: user.username,
+      image: user.image,
     });
 
     console.log(accessToken);
@@ -87,11 +90,11 @@ async function refreshTokenService(token) {
         const newAccessToken = generateAccessToken({
           id: user.id,
           username: user.username,
+          image: user.image,
         });
         return { accessToken: newAccessToken };
       }
       req.user = user;
-      next();
     });
   } catch (error) {
     console.error("User not found.", error);

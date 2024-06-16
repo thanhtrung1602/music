@@ -98,6 +98,15 @@ class UsersController {
       return res.status(500).json({ Error: ">>> co loi ", err: error.message });
     }
   }
+
+  getUserToken(req, res) {
+    const { accessToken } = req.cookies;
+    if (!accessToken) {
+      return res.status(404).json("not found token!");
+    }
+    console.log(accessToken);
+    return res.status(200).json(accessToken);
+  }
 }
 
 module.exports = new UsersController();
