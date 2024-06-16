@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+// import { useQuery } from "@tanstack/react-query";
+import { useState, useRef, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HeadlessTippy from "@tippyjs/react/headless";
 import {
@@ -13,7 +14,7 @@ import logo from "~/assets/img/logo/logo.png";
 import Search from "~/components/layout/components/Search";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
 import icon from "~/assets/img/icon";
-
+import { CookieUser } from "~/Hooks/UserToken";
 type Users = {
   id: number;
   image: string;
@@ -49,6 +50,8 @@ function Header() {
   const [contact, setContact] = useState(false);
   const refShow = useRef<HTMLDivElement>(null);
   const refContact = useRef<HTMLDivElement>(null);
+
+  const user = useContext(CookieUser);
 
   useEffect(() => {
     if (refShow.current && refContact.current) {
@@ -142,12 +145,16 @@ function Header() {
             onClick={() => setShow(true)}
           >
             <img
-              src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+              src={
+                user
+                  ? user.image
+                  : "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+              }
               className="w-6 rounded-full"
               alt=""
             />
             <FontAwesomeIcon
-              className="hover:text-[#fff]"
+              className="w-[10px] hover:text-[#fff]"
               icon={faChevronDown}
             />
           </div>

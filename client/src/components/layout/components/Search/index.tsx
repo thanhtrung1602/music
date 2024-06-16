@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HeadlessTippy from "@tippyjs/react/headless";
 import { faUser, faMusic } from "@fortawesome/free-solid-svg-icons";
@@ -14,8 +14,7 @@ function Search(props: ISearchProps) {
   const [key, setKey] = useState("");
   const [hiddenSearch, setHiddenSearch] = useState(false);
   const [search, setSearch] = useState<ISearch>();
-
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["search", key],
     queryFn: () => fetchSearch(key),
   });
@@ -26,10 +25,6 @@ function Search(props: ISearchProps) {
       setHiddenSearch(false);
     }
   }, [key, data]);
-
-  if (error) {
-    return <div>error{error.message}</div>;
-  }
 
   return (
     <>
@@ -97,4 +92,4 @@ function Search(props: ISearchProps) {
   );
 }
 
-export default Search;
+export default memo(Search);
