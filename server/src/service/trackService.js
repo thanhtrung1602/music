@@ -269,6 +269,12 @@ async function getTrackGenre(id) {
       where: {
         genre_id: id,
       },
+      include: [
+        {
+          model: db.User,
+          as: "userData",
+        },
+      ],
     });
     return { getTrackGenre };
   } catch (error) {

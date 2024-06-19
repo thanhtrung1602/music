@@ -30,9 +30,6 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
       },
-      category_id: {
-        type: Sequelize.INTEGER,
-      },
       genre_id: {
         type: Sequelize.INTEGER,
       },

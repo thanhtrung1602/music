@@ -16,11 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id",
         as: "userData",
       });
-      Track.belongsTo(models.Categories, {
-        foreignKey: "category_id",
-        targetKey: "id",
-        as: "categoryData",
-      });
       Track.belongsTo(models.Genre, {
         foreignKey: "genre_id",
         targetKey: "id",
@@ -35,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       image: DataTypes.STRING,
       description: DataTypes.STRING,
       user_id: DataTypes.INTEGER,
-      category_id: DataTypes.INTEGER,
       genre_id: DataTypes.INTEGER,
       listen_count: DataTypes.INTEGER,
       status: DataTypes.BOOLEAN,
