@@ -5,10 +5,12 @@ function DefaultLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <div className="">
-        <div>{children}</div>
-        <SlideBar />
-      </div>
+      <main className="mt-16 flex w-full items-center justify-center">
+        <div className="relative flex w-[1519.2px] items-center justify-center">
+          <div className="float-left w-[820px]">{children}</div>
+          <SlideBar />
+        </div>
+      </main>
     </>
   );
 }

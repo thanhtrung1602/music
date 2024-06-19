@@ -1,9 +1,11 @@
 function SlideBar() {
-    return ( 
-        <>
-            <h2>Slide bar</h2>
-        </>
-    );
+  return (
+    <div className="float-right w-[300px]">
+      <div>
+        <h2>Artists you should follow</h2>
+      </div>
+    </div>
+  );
 }
 
 export default SlideBar;
