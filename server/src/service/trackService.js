@@ -30,6 +30,12 @@ async function getTrackUser(userId) {
       where: {
         user_id: userId,
       },
+      include: [
+        {
+          model: db.User,
+          as: "userData",
+        },
+      ],
     });
     return { track };
   } catch (error) {
