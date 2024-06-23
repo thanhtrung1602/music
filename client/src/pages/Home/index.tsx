@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { fetchGenre } from "~/Api";
-import { fetchTrackGenre } from "~/Api/Track";
+import { Link } from "react-router-dom";
+import { fetchAll } from "~/Api";
+import { fetchId } from "~/Api";
 import { Shuffle } from "~/logic";
 import { ITrack } from "~/types/track";
 type Genre = {
@@ -17,19 +18,19 @@ function Home() {
 
   const { data: genres } = useQuery({
     queryKey: ["genre"],
-    queryFn: () => fetchGenre(),
+    queryFn: () => fetchAll("/tracks/getGenre"),
   });
 
   const { data: track } = useQuery({
     queryKey: ["track", genreId],
-    queryFn: () => fetchTrackGenre(genreId),
+    queryFn: () => fetchId("/tracks/getTrackGenre/", genreId),
   });
 
-  const shuffleTrack: ITrack[] = Shuffle(track);
+  const shuffleTrack: ITrack[] = Shuffle(track?.getTrackGenre);
 
   useEffect(() => {
     if (genres) {
-      genres.map((genre: Genre) => {
+      genres?.getGenre.map((genre: Genre) => {
         setGenre(genre);
         setGenreId(genre.id);
       });
@@ -38,18 +39,32 @@ function Home() {
 
   return (
     <>
-      <div className="">
-        {genre && <h2 key={genre.id}>{genre.title}</h2>}
-        <div className="grid w-full grid-cols-4">
+      <div className="w-full">
+        {genre && (
+          <h2 className="mb-3" key={genre.id}>
+            {genre.title}
+          </h2>
+        )}
+        <div className="grid w-full grid-cols-4 gap-5">
           {shuffleTrack.slice(0, 4).map((track) => (
-            <div className="w-[25%]">
-              <div>
-                <img className="" src={track.image} alt={track.track_name} />
-              </div>
-              <div>
-                <p className="w-full">{track.track_name}</p>
-                <p className="w-full">{track.userData?.username}</p>
-              </div>
+            <div key={track.id} className="w-[174px]">
+              <Link to={`/detail/${track.id}`}>
+                <div className="h-[174px] w-full">
+                  <img
+                    className="h-full w-full object-cover"
+                    src={track.image}
+                    alt={track.track_name}
+                  />
+                </div>
+                <div className="w-full">
+                  <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                    {track.track_name}
+                  </p>
+                  <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                    {track.userData?.username}
+                  </p>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

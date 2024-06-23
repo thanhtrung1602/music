@@ -63,7 +63,7 @@ function Header() {
   const categories = ["Home", "Feed", "Library"];
 
   return (
-    <header className="fixed top-0 flex h-[46px] w-full items-center justify-center bg-[#333] text-sm leading-normal text-[#ccc]">
+    <header className="fixed top-0 z-50 flex h-[46px] w-full items-center justify-center bg-[#333] text-sm leading-normal text-[#ccc]">
       <div className="flex w-[1519.2px] items-center justify-center">
         <div className="block">
           <div className="flex items-center justify-center">
@@ -177,7 +177,7 @@ function Header() {
             visible={contact}
             render={(attrs) => (
               <div
-                className="mt-[-9.5px] translate-x-[-62px] border border-solid border-[#ccc]"
+                className="mt-[-9.5px] translate-x-[-62px] border border-solid border-[#ccc] bg-[#fff]"
                 {...attrs}
               >
                 <ul className="w-[168.4px] text-xs font-semibold text-[#333]">

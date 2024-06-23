@@ -1,13 +1,13 @@
 import { useState, FormEvent } from "react";
 
 import icon from "~/assets/img/icon";
-import { useFetchLogin } from "~/Api";
+import { fetchPost } from "~/Api";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate } = useFetchLogin();
+  const { mutate } = fetchPost();
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,7 +17,7 @@ function Login() {
       password,
     };
 
-    mutate(data);
+    mutate({ url: "/auth/login", data });
   }
 
   return (

@@ -8,7 +8,7 @@ async function fetchCookie() {
         Authorization: `Bearer ${cookie}`,
       },
     });
-    return userResponse.data; // Trả về dữ liệu của user
+    return userResponse.data;
   } catch (error) {
     throw new Error(`Error fetching data: ${error}`);
   }
