@@ -19,7 +19,7 @@ router.post("/createPlaylist", trackController.createPlaylist);
 
 router.post("/createAlbums", trackController.createAlbums);
 
-router.delete("/unLikeTrack/:trackId/:userId", trackController.unLikeTrack);
+router.delete("/unLikeTrack/", trackController.unLikeTrack);
 
 router.post("/likeTrack/", trackController.likeTrack);
 

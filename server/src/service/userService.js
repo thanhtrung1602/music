@@ -48,6 +48,21 @@ async function follows({ followerId, followingId }) {
   }
 }
 
+async function unFollows({ followerId, followingId }) {
+  try {
+    const unFollow = await db.Follows.destroy({
+      where: {
+        followerId,
+        followingId,
+      },
+    });
+    return { unFollow };
+  } catch (error) {
+    console.error("Error follow", error);
+    throw error;
+  }
+}
+
 //Số lượng người đang theo dõi tôi
 async function followerUserCount(id) {
   try {
@@ -121,6 +136,7 @@ async function getFollowingUser(id) {
 module.exports = {
   getAllUser,
   follows,
+  unFollows,
   getUserDetail,
   followerUserCount,
   followingUserCount,

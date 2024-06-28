@@ -102,17 +102,17 @@ class TrackController {
   }
 
   async unLikeTrack(req, res) {
-    const trackId = req.params.trackId;
-    const userId = req.params.userId;
+    const { track_id, user_id } = req.body;
+
     try {
-      if (!trackId || !userId) {
+      if (!track_id || !user_id) {
         return res.status(400).json({
           EM: "missing",
           EC: "-1",
           DT: "",
         });
       }
-      const unLikeTrack = await trackService.unLikeTrack(trackId, userId);
+      const unLikeTrack = await trackService.unLikeTrack(req.body);
       return res.status(200).json(unLikeTrack);
     } catch (error) {
       console.error(">>> co loi ", error);

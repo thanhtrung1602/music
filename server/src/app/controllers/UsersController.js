@@ -41,6 +41,21 @@ class UsersController {
       return res.status(500).json({ Error: ">>> co loi ", err: error.message });
     }
   }
+
+  async unFollow(req, res) {
+    const { followerId, followingId } = req.body;
+    try {
+      if (!followerId || !followingId) {
+        return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
+      }
+      const unFollow = await userService.unFollows(req.body);
+      return res.status(200).json(unFollow);
+    } catch (error) {
+      console.error(">>> co loi ", error);
+      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
+    }
+  }
+
   // Số lượng người đang theo dõi tôi
   async followerUserCount(req, res) {
     const id = req.params.id;

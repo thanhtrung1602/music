@@ -108,6 +108,7 @@ async function likeTrack({ track_id, user_id }) {
         user_id,
       },
     });
+
     return { likeTrack };
   } catch (error) {
     console.error("Error findOrCreate track:", error);
@@ -115,12 +116,12 @@ async function likeTrack({ track_id, user_id }) {
   }
 }
 
-async function unLikeTrack(trackId, userId) {
+async function unLikeTrack({ track_id, user_id }) {
   try {
     const unLikeTrack = await db.Like_track.destroy({
       where: {
-        track_id: trackId,
-        user_id: userId,
+        track_id,
+        user_id,
       },
     });
     return { unLikeTrack };
