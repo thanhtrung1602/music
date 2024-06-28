@@ -1,12 +1,12 @@
 function Shuffle<T>(arr: T[]): T[] {
   if (!arr) {
-    console.error("Input array is undefined");
+    // console.error("Input array is undefined");
     return [];
   }
 
   const shuffleArray: T[] = [];
   const useIndexses: number[] = [];
-  
+
   let i = 0;
   while (i < arr.length) {
     const randomArray = Math.floor(Math.random() * arr.length);
@@ -16,8 +16,6 @@ function Shuffle<T>(arr: T[]): T[] {
       i++;
     }
   }
-
-  console.log(shuffleArray);
   return shuffleArray;
 }
 

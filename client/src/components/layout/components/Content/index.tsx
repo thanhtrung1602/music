@@ -1,21 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import WaveSurfer from "wavesurfer.js";
+import moment from "moment";
+
 import { fetchId } from "~/Api";
 import icon from "~/assets/img/icon";
 import { ITrack } from "~/types/track";
 
 function Content() {
-  const params = useParams();
+  const { id } = useParams();
   const waveSurFerRefs = useRef<{ [key: string]: WaveSurfer | null }>({});
   const waveformRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [playingTrack, setPlayingTrack] = useState<number | null>(null);
   const [durations, setDurations] = useState<{ [key: string]: number }>({});
-  const { data: tracks } = useQuery({
-    queryKey: ["tracks", Number(params.id)],
-    queryFn: () => fetchId("/tracks/getTrack/", Number(params.id)),
-  });
+
+  const { data: tracks } = fetchId("/tracks/getTrack/", Number(id));
 
   useEffect(() => {
     if (tracks) {
@@ -27,7 +26,7 @@ function Content() {
               waveColor: "#666",
               progressColor: "#f50",
               dragToSeek: true,
-              width: 670,
+              width: 650,
               height: 60,
               barGap: 2,
               barRadius: 20,
@@ -93,17 +92,19 @@ function Content() {
   };
 
   return (
-    <section className="w-[860px]">
+    <section className="w-[860px] border-r border-[#f2f2f2] pr-[5px]">
       {tracks &&
         tracks.track.map((track: ITrack) => (
           <div className="mb-8 flex" key={track.id}>
-            <article className="">
-              <img
-                className="h-[148px] w-[200px]"
-                src={track.image || track.userData?.image}
-                alt=""
-              />
-            </article>
+            <NavLink to={"/detail/" + track.id}>
+              <article className="">
+                <img
+                  className="h-[160px] w-[200px]"
+                  src={track.image || track.userData?.image}
+                  alt=""
+                />
+              </article>
+            </NavLink>
             <article className="ml-3 flex w-full flex-col justify-between">
               <article className="flex w-full gap-1.5">
                 <article>
@@ -131,14 +132,16 @@ function Content() {
                     <span className="text-xs text-[#999]">
                       {track?.userData?.username}
                     </span>
-                    <span className="text-base text-[#333]">
-                      {track.track_name}
-                    </span>
+                    <NavLink to={"/detail/" + track.id}>
+                      <span className="text-base text-[#333]">
+                        {track.track_name}
+                      </span>
+                    </NavLink>
                   </div>
                   <div className="w-[15%]">
                     <time dateTime="2024-05-14T06:49:29.000Z">
                       <span className="w-full text-xs text-[#ccc]">
-                        1 months ago
+                        {moment(track.createdAt).fromNow()}
                       </span>
                     </time>
                   </div>
@@ -155,43 +158,58 @@ function Content() {
                 </div>
               </article>
               <article className="flex items-center justify-between">
-                <div className="flex gap-1">
-                  <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
-                    <img src={icon.heart} alt="" />
-                    <span>1,111</span>
-                  </button>
-                  <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
-                    <img src={icon.repost} alt="" />
-                    <span>14</span>
-                  </button>
-                  <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
-                    <img src={icon.share} alt="" />
-                    <span>Share</span>
-                  </button>
-                  <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
-                    <img src={icon.cpLink} alt="" />
-                    <span>Copy Link</span>
-                  </button>
-                  <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
-                    <img src={icon.more} alt="" />
-                    <span>More</span>
-                  </button>
-                </div>
-                <ul className="flex items-center gap-3">
-                  <li className="flex items-center gap-1 text-xs text-[#999]">
-                    <img src={icon.play} alt="" />
-                    <span>104k</span>
-                  </li>
-                  <li className="flex items-center gap-1 text-xs text-[#999]">
-                    <img src={icon.comment} alt="" />
-                    <span>11</span>
-                  </li>
-                </ul>
+                <MiniStart id={track.id} />
               </article>
             </article>
           </div>
         ))}
     </section>
+  );
+}
+
+function MiniStart({ id }: { id: number }) {
+  const { data: countComment } = fetchId(
+    "/comments/getCommentTrackCount/",
+    Number(id),
+  );
+  const { data: countTrack } = fetchId("/tracks/getAllLikeTrack/", Number(id));
+  const countLikeTrack = countTrack?.getAllLikeTrack;
+  const countCommentTrack = countComment?.amountCommentTrack;
+  return (
+    <>
+      <div className="flex gap-1">
+        <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
+          <img src={icon.heart} alt="" />
+          <span>{countLikeTrack}</span>
+        </button>
+        <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
+          <img src={icon.repost} alt="" />
+          <span>14</span>
+        </button>
+        <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
+          <img src={icon.share} alt="" />
+          <span>Share</span>
+        </button>
+        <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
+          <img src={icon.cpLink} alt="" />
+          <span>Copy Link</span>
+        </button>
+        <button className="flex h-[22px] items-center gap-1 rounded border py-[2px] pl-2 pr-2.5 text-xs">
+          <img src={icon.more} alt="" />
+          <span>More</span>
+        </button>
+      </div>
+      <ul className="flex items-center gap-3">
+        <li className="flex items-center gap-1 text-xs text-[#999]">
+          <img src={icon.play} alt="" />
+          <span>104k</span>
+        </li>
+        <li className="flex items-center gap-1 text-xs text-[#999]">
+          <img src={icon.comment} alt="" />
+          <span>{countCommentTrack}</span>
+        </li>
+      </ul>
+    </>
   );
 }
 

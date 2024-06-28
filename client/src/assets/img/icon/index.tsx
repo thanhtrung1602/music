@@ -24,6 +24,18 @@ import bardPlus from "~/assets/img/icon/bardPlus.svg";
 import email from "~/assets/img/icon/email.svg";
 import more from "~/assets/img/icon/more.svg";
 import station from "~/assets/img/icon/station.svg";
+import followSuccess from "~/assets/img/icon/followSuccess.svg";
+import heartLike from "~/assets/img/icon/heartLike.svg";
+import pen from "~/assets/img/icon/pen.svg";
+import camera from "~/assets/img/icon/camera.svg";
+import skipLeft from "~/assets/img/icon/skipLeft.svg";
+import skipRight from "~/assets/img/icon/skipRight.svg";
+import playBold from "~/assets/img/icon/playBold.svg";
+import pauseBold from "~/assets/img/icon/pauseBold.svg";
+import repeatTrack from "~/assets/img/icon/repeatTrack.svg";
+import repeatOne from "~/assets/img/icon/repeatOne.svg";
+import volume from "~/assets/img/icon/volume.svg";
+import userPlusB from "~/assets/img/icon/userPlusB.svg";
 const icon = {
   profile,
   heart,
@@ -51,6 +63,18 @@ const icon = {
   userPlusW,
   more,
   station,
+  followSuccess,
+  heartLike,
+  pen,
+  camera,
+  skipLeft,
+  skipRight,
+  playBold,
+  pauseBold,
+  repeatTrack,
+  repeatOne,
+  volume,
+  userPlusB,
 };
 
 export default icon;

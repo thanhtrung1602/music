@@ -1,14 +1,14 @@
 import instance from "~/services/customize-axios";
-async function fetchCookie() {
+async function fetchCookie(url: string) {
   try {
     const response = await instance.get("/users/getUserToken");
     const cookie = response.data;
-    const userResponse = await instance.get("/auth/log", {
+    const { data } = await instance.get(url, {
       headers: {
         Authorization: `Bearer ${cookie}`,
       },
     });
-    return userResponse.data;
+    return { data };
   } catch (error) {
     throw new Error(`Error fetching data: ${error}`);
   }

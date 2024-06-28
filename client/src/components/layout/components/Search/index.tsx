@@ -10,6 +10,7 @@ import { User } from "~/types/user";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
 import ResultSearch from "~/components/layout/components/ResultSearch";
 import { fetchSearch } from "~/Api";
+import { Link } from "react-router-dom";
 function Search(props: ISearchProps) {
   const [key, setKey] = useState("");
   const [hiddenSearch, setHiddenSearch] = useState(false);
@@ -41,22 +42,34 @@ function Search(props: ISearchProps) {
                     <li className="bg-[#333] p-[6px]">Loading...</li>
                   )}
                   {search?.users.map((user: User) => (
-                    <ResultSearch
+                    <li
+                      className="cursor-pointer p-[6px] hover:bg-[#333]"
                       key={user.id}
-                      id={user.id}
-                      name={user.username}
-                      image={user.image}
-                      icon={faUser}
-                    />
+                    >
+                      <Link to={"/profile/" + user.id}>
+                        <ResultSearch
+                          id={user.id}
+                          name={user.username}
+                          image={user.image}
+                          icon={faUser}
+                        />
+                      </Link>
+                    </li>
                   ))}
                   {search?.tracks.map((track: ITrack) => (
-                    <ResultSearch
+                    <li
+                      className="cursor-pointer p-[6px] hover:bg-[#333]"
                       key={track.id}
-                      id={track.id}
-                      name={track.track_name}
-                      image={track.image}
-                      icon={faMusic}
-                    />
+                    >
+                      <Link to={"/detail/" + track.id}>
+                        <ResultSearch
+                          id={track.id}
+                          name={track.track_name}
+                          image={track.image}
+                          icon={faMusic}
+                        />
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               )}

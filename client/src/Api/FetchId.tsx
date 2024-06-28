@@ -1,13 +1,14 @@
 import instance from "~/services/customize-axios";
-
-async function fetchId(url: string, id: number | null) {
-  try {
-    const { data } = await instance.get(`${url}${id}`);
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
-  }
+import { useQuery } from "@tanstack/react-query";
+function FetchId(url: string, id: number | null) {
+  return useQuery({
+    queryKey: [url, id],
+    queryFn: async () => {
+      const { data } = await instance.get(`${url}${id}`);
+      return data;
+    },
+    enabled: id !== null,
+  });
 }
 
-export default fetchId;
+export default FetchId;

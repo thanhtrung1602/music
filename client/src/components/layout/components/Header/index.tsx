@@ -15,6 +15,7 @@ import Search from "~/components/layout/components/Search";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
 import icon from "~/assets/img/icon";
 import { CookieUser } from "~/Hooks/UserToken";
+import { NavLink } from "react-router-dom";
 type Users = {
   id: number;
   image: string;
@@ -22,12 +23,11 @@ type Users = {
 };
 
 const users = [
-  { id: 1, image: icon.profile, name: "Profile" },
-  { id: 2, image: icon.heart, name: "Likes" },
-  { id: 3, image: icon.playlist, name: "Playlists" },
-  { id: 4, image: icon.follow, name: "Following" },
-  { id: 5, image: icon.follow, name: "Who to follow" },
-  { id: 6, image: icon.track, name: "Tracks" },
+  { id: 1, image: icon.heart, name: "Likes" },
+  { id: 2, image: icon.playlist, name: "Playlists" },
+  { id: 3, image: icon.follow, name: "Following" },
+  { id: 4, image: icon.follow, name: "Who to follow" },
+  { id: 5, image: icon.track, name: "Tracks" },
 ];
 
 const contacts = [
@@ -60,7 +60,7 @@ function Header() {
     }
   }, [show, contact]);
 
-  const categories = ["Home", "Feed", "Library"];
+  const categories = ["Feed", "Library"];
 
   return (
     <header className="fixed top-0 z-50 flex h-[46px] w-full items-center justify-center bg-[#333] text-sm leading-normal text-[#ccc]">
@@ -74,18 +74,24 @@ function Header() {
             </div>
             <nav>
               <ul className="flex items-center justify-center">
-                {categories.map((category, i) => {
-                  return (
-                    <li className="border-r-[1px] border-[#111]" key={i}>
-                      <a
-                        href=""
-                        className="block h-[46px] w-[104px] cursor-pointer p-3 text-center"
-                      >
-                        {category}
-                      </a>
-                    </li>
-                  );
-                })}
+                <li className="border-r-[1px] border-[#111]">
+                  <a
+                    href="/"
+                    className="block h-[46px] w-[104px] cursor-pointer p-3 text-center"
+                  >
+                    {"Home"}
+                  </a>
+                </li>
+                {categories.map((category, i) => (
+                  <li className="border-r-[1px] border-[#111]" key={i}>
+                    <a
+                      href=""
+                      className="block h-[46px] w-[104px] cursor-pointer p-3 text-center"
+                    >
+                      {category}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </nav>
           </div>
@@ -102,7 +108,7 @@ function Header() {
               <a href="">For Artists</a>
             </li>
             <li className="px-2 hover:text-[#fff]">
-              <a href="">Upload</a>
+              <NavLink to={"/upload"}>Upload</NavLink>
             </li>
           </ul>
         </nav>
@@ -116,23 +122,34 @@ function Header() {
             >
               <PopperWrapper>
                 <ul className="text-xs font-semibold text-[#333]">
-                  {users.map((user: Users) => {
-                    return (
-                      <li className="" key={user.id}>
-                        <a
-                          href=""
-                          className="relative flex h-[32.8px] w-[133.4px] items-center py-2 pr-[10px] hover:bg-[#f2f2f2]"
-                        >
-                          <img
-                            className="block h-5 w-[34px]"
-                            src={user.image}
-                            alt={user.name}
-                          />
-                          <span className="pl-1">{user.name}</span>
-                        </a>
-                      </li>
-                    );
-                  })}
+                  <li className="">
+                    <NavLink
+                      to={"/profile/" + user?.id}
+                      className="relative flex h-[32.8px] w-[133.4px] items-center py-2 pr-[10px] hover:bg-[#f2f2f2]"
+                    >
+                      <img
+                        className="block h-5 w-[34px]"
+                        src={icon.profile}
+                        alt={"icon"}
+                      />
+                      <span className="pl-1">{"Profile"}</span>
+                    </NavLink>
+                  </li>
+                  {users.map((user: Users) => (
+                    <li className="" key={user.id}>
+                      <a
+                        href=""
+                        className="relative flex h-[32.8px] w-[133.4px] items-center py-2 pr-[10px] hover:bg-[#f2f2f2]"
+                      >
+                        <img
+                          className="block h-5 w-[34px]"
+                          src={user.image}
+                          alt={user.name}
+                        />
+                        <span className="pl-1">{user.name}</span>
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </PopperWrapper>
             </div>

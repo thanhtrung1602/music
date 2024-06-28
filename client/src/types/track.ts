@@ -9,4 +9,5 @@ export interface ITrack {
   category_id: number;
   genre_id: number;
   userData?: User;
+  createdAt: Date;
 }

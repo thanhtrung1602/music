@@ -1,6 +1,6 @@
 import Header from "~/components/layout/components/Header";
 import SlideBar from "~/components/layout/DefaultLayout/SlideBar";
-
+import Footer from "~/components/layout/components/Footer";
 function DefaultLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -14,6 +14,8 @@ function DefaultLayout({ children }: { children: React.ReactNode }) {
           <SlideBar />
         </div>
       </main>
+
+      <Footer />
     </>
   );
 }

@@ -8,4 +8,11 @@ function FetchPost() {
   });
 }
 
+export function FetchDelete() {
+  return useMutation({
+    mutationFn: ({ url, data }: { url: string; data: object }) =>
+      instance.delete(url, { data }),
+  });
+}
+
 export default FetchPost;

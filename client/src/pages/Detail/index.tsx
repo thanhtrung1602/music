@@ -2,13 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { useParams } from "react-router-dom";
 import { FastAverageColor } from "fast-average-color";
-import { fetchId } from "~/Api";
+// import { fetchId } from "~/Api";
+import moment from "moment";
 import icon from "~/assets/img/icon";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
-import { useQuery } from "@tanstack/react-query";
 import { ITrack } from "~/types/track";
+import instance from "~/services/customize-axios";
 
 function Home() {
+  const { id } = useParams();
   const waveformRef = useRef<HTMLDivElement>(null);
   const [trackDetail, setTrackDetail] = useState<ITrack | null>(null);
   const waveSurFer = useRef<WaveSurfer | null>(null);
@@ -18,16 +20,11 @@ function Home() {
   const imgRef = useRef(null);
   const [bgColor, setBgColor] = useState("#ffffff");
 
-  const params = useParams();
-
-  const { data: track } = useQuery({
-    queryKey: ["track", Number(params.id)],
-    queryFn: () => fetchId("/tracks/getOneTrack/", Number(params.id)),
-  });
-
   useEffect(() => {
-    setTrackDetail(track?.getOneTrack);
-  }, [track]);
+    instance.get(`/tracks/getOneTrack/${id}`).then((res) => {
+      setTrackDetail(res.data.getOneTrack);
+    });
+  }, [id]);
 
   useEffect(() => {
     const handleReady = () => {
@@ -50,7 +47,7 @@ function Home() {
         waveColor: "#fff",
         progressColor: "#f50",
         dragToSeek: true,
-        width: 820,
+        width: 800,
         height: 85,
         barGap: 1,
         barRadius: 20,
@@ -58,7 +55,6 @@ function Home() {
       });
 
       waveSurFer.current.load(trackDetail.sound);
-
       waveSurFer.current.on("ready", handleReady);
       waveSurFer.current.on("audioprocess", handleAudioProcess);
       waveSurFer.current.on("finish", handleFinish);
@@ -67,13 +63,12 @@ function Home() {
     return () => {
       if (waveSurFer.current) {
         waveSurFer.current.un("audioprocess", handleAudioProcess);
-        waveSurFer.current.un("ready", handleReady);
         waveSurFer.current.un("finish", handleFinish);
         waveSurFer.current.destroy();
         setPlaying(false);
       }
     };
-  }, [trackDetail]);
+  }, [trackDetail, id]);
 
   const handlePlayPause = () => {
     if (waveSurFer.current) {
@@ -131,7 +126,7 @@ function Home() {
             className="flex h-full flex-row-reverse justify-between"
             style={{ backgroundColor: bgColor }}
           >
-            <div className="mx-2 my-[18px]">
+            <div className="mx-[18px] my-[18px]">
               <img
                 ref={imgRef}
                 className="flex h-[340px] w-[340px] items-center justify-center"
@@ -177,7 +172,7 @@ function Home() {
                   </div>
                 </div>
                 <div className="mt-7 text-white">
-                  <span>3 months ago</span>
+                  <span>{moment(trackDetail?.createdAt).fromNow()}</span>
                 </div>
               </div>
               <div className="ml-[30px] flex items-center">

@@ -4,8 +4,10 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        "custom-gradient":
-          "linear-gradient(135deg, rgb(108, 129, 132) 0%, rgb(162, 86, 77) 100%)",
+        "custom-gradient": "linear-gradient(135deg, #846170, #70929c)",
+      },
+      boxShadow: {
+        custom: "0 2px 7px -1px rgba(0, 0, 0, .4)",
       },
     },
   },

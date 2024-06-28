@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
+import { useParams } from "react-router-dom";
+
+import { CookieUser } from "~/Hooks/UserToken";
 import icon from "~/assets/img/icon";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
+import { fetchId } from "~/Api";
+import { IUser } from "~/types/users";
 
 const titles = [
   { id: 1, name: "All" },
@@ -12,14 +17,23 @@ const titles = [
 ];
 
 function Profile() {
+  const u = useContext(CookieUser);
+  const { id } = useParams();
   const imgRef = useRef(null);
   const [bgColor, setBgColor] = useState("#ffffff");
+  const [user, setUser] = useState<IUser | null>(null);
+
+  const { data: users } = fetchId("/users/getUserDetail/", Number(id));
+
+  useEffect(() => {
+    setUser(users?.getUserDetail);
+  }, [users]);
 
   useEffect(() => {
     const img = imgRef.current;
     if (img) {
       const fac = new FastAverageColor();
-      const proxyUrl = `https://i1.sndcdn.com/avatars-VRK7gRM7x8uZTSa6-UCAdHA-t500x500.jpg`;
+      const proxyUrl = `${user?.image}`;
 
       const image = new Image();
       image.crossOrigin = "Anonymous";
@@ -38,7 +52,7 @@ function Profile() {
         console.error("Image loading error:", e);
       };
     }
-  }, []);
+  }, [user]);
 
   return (
     <div>
@@ -52,7 +66,7 @@ function Profile() {
               <img
                 ref={imgRef}
                 className="flex h-[200px] w-[248px] items-center justify-center rounded-full"
-                src="https://i1.sndcdn.com/avatars-VRK7gRM7x8uZTSa6-UCAdHA-t500x500.jpg"
+                src={user?.image}
                 alt={"avatar"}
               />
             </div>
@@ -63,19 +77,21 @@ function Profile() {
                   <div className="flex flex-col gap-2">
                     <div className="w-full">
                       <span className="flex h-[36.8px] items-center gap-2 bg-[#000000cc] px-2 py-1 text-2xl text-[#fff]">
-                        denvau
+                        {user?.username}
                         <img className="h-[18px]" src={icon.checkBlue} alt="" />
                       </span>
                     </div>
                     <div className="w-full">
                       <span className="h-[36.8px] w-full bg-[#000000cc] px-2 py-1 text-base text-[#ccc]">
-                        Đen Vâu
+                        {user?.username}
                       </span>
                     </div>
                     <div className="w-full">
-                      <span className="h-[36.8px] w-full bg-[#000000cc] px-2 py-1 text-base text-[#ccc]">
-                        Viet Nam
-                      </span>
+                      {user?.country && (
+                        <span className="h-[36.8px] w-full bg-[#000000cc] px-2 py-1 text-base text-[#ccc]">
+                          {user.country}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -91,26 +107,39 @@ function Profile() {
             <li key={title.id}>{title.name}</li>
           ))}
         </ul>
-        <article className="flex items-center">
-          <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
-            <img src={icon.station} alt="" />
-            <span>Station</span>
-          </button>
-          <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
-            <img src={icon.userPlus} alt="" />
-            <span>Follow</span>
-          </button>
-          <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
-            <img src={icon.share} alt="" />
-            <span>Share</span>
-          </button>
-          <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
-            <img src={icon.email} alt="" />
-          </button>
-          <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
-            <img src={icon.more} alt="" />
-          </button>
-        </article>
+        {Number(u?.id) !== Number(id) ? (
+          <article className="flex items-center">
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.station} alt="" />
+              <span>Station</span>
+            </button>
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.userPlus} alt="" />
+              <span>Follow</span>
+            </button>
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.share} alt="" />
+              <span>Share</span>
+            </button>
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.email} alt="" />
+            </button>
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.more} alt="" />
+            </button>
+          </article>
+        ) : (
+          <article className="flex items-center">
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.share} alt="" />
+              <span>Share</span>
+            </button>
+            <button className="mr-1.5 flex h-[26px] items-center gap-1.5 rounded border py-[2px] pl-[10px] pr-[12px] text-sm text-[#333]">
+              <img src={icon.pen} alt="" />
+              <span>edit</span>
+            </button>
+          </article>
+        )}
       </section>
     </div>
   );

@@ -3,6 +3,7 @@ import TrackItem from "~/components/TrackItem";
 import UserItem from "~/components/UserItem";
 import TitleItem from "~/components/TitleItem";
 function SlideBar() {
+  console.log(3);
   return (
     <div className="float-right w-[350px] pl-7">
       <TitleItem

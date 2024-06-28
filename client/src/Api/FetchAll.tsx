@@ -1,12 +1,13 @@
 import instance from "~/services/customize-axios";
-async function fetchAll(url: string) {
-  try {
-    const { data } = await instance.get(url);
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
-  }
+import { useQuery } from "@tanstack/react-query";
+function FetchAll(url: string) {
+  return useQuery({
+    queryKey: [url],
+    queryFn: async () => {
+      const { data } = await instance.get(url);
+      return data;
+    },
+  });
 }
 
-export default fetchAll;
+export default FetchAll;
