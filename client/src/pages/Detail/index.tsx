@@ -1,85 +1,51 @@
-import { useState, useRef, useEffect } from "react";
-import WaveSurfer from "wavesurfer.js";
-import { useParams } from "react-router-dom";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { FastAverageColor } from "fast-average-color";
-// import { fetchId } from "~/Api";
 import moment from "moment";
+import { useParams } from "react-router-dom";
 import icon from "~/assets/img/icon";
 import { Wrapper as PopperWrapper } from "~/components/Popper";
-import { ITrack } from "~/types/track";
-import instance from "~/services/customize-axios";
+import useWaveform from "~/components/waveform";
 
 function Home() {
-  const { id } = useParams();
-  const waveformRef = useRef<HTMLDivElement>(null);
-  const [trackDetail, setTrackDetail] = useState<ITrack | null>(null);
-  const waveSurFer = useRef<WaveSurfer | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const params = useParams();
+  const waveformRefHome = useRef<HTMLDivElement>(null);
   const imgRef = useRef(null);
+  const [formattedTime, setFormattedTime] = useState("");
+
   const [bgColor, setBgColor] = useState("#ffffff");
+  const id = Number(params.id);
+
+  const wave = useMemo(
+    () => ({
+      wc: "#fff",
+      pc: "#f50",
+      w: 800,
+      h: 85,
+      bg: 1,
+      br: 20,
+      bw: 2,
+    }),
+    [],
+  );
+
+  const {
+    isPlaying,
+    trackDetail,
+    duration,
+    currentTime,
+    handlePlayPause,
+    handleClickOnWaveform,
+  } = useWaveform({
+    waveformRef: waveformRefHome,
+    id,
+    wave,
+  });
 
   useEffect(() => {
-    instance.get(`/tracks/getOneTrack/${id}`).then((res) => {
-      setTrackDetail(res.data.getOneTrack);
-    });
-  }, [id]);
-
-  useEffect(() => {
-    const handleReady = () => {
-      setDuration(waveSurFer.current?.getDuration() ?? 0);
-    };
-
-    const handleAudioProcess = () => {
-      setCurrentTime(waveSurFer.current?.getCurrentTime() ?? 0);
-    };
-
-    const handleFinish = () => {
-      setPlaying(false);
-      waveSurFer.current?.play();
-      setPlaying(true);
-    };
-
-    if (waveformRef.current && trackDetail?.sound) {
-      waveSurFer.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "#fff",
-        progressColor: "#f50",
-        dragToSeek: true,
-        width: 800,
-        height: 85,
-        barGap: 1,
-        barRadius: 20,
-        barWidth: 2,
-      });
-
-      waveSurFer.current.load(trackDetail.sound);
-      waveSurFer.current.on("ready", handleReady);
-      waveSurFer.current.on("audioprocess", handleAudioProcess);
-      waveSurFer.current.on("finish", handleFinish);
+    if (trackDetail?.createdAt) {
+      setFormattedTime(moment(trackDetail.createdAt).fromNow());
     }
-
-    return () => {
-      if (waveSurFer.current) {
-        waveSurFer.current.un("audioprocess", handleAudioProcess);
-        waveSurFer.current.un("finish", handleFinish);
-        waveSurFer.current.destroy();
-        setPlaying(false);
-      }
-    };
-  }, [trackDetail, id]);
-
-  const handlePlayPause = () => {
-    if (waveSurFer.current) {
-      if (playing) {
-        waveSurFer.current.pause();
-      } else {
-        waveSurFer.current.play();
-      }
-      setPlaying(!playing);
-    }
-  };
+  }, [trackDetail]);
 
   useEffect(() => {
     const img = imgRef.current;
@@ -141,21 +107,13 @@ function Home() {
                   <div className="">
                     <button
                       onClick={handlePlayPause}
-                      className="relative h-[60px] w-[60px] rounded-full border-[#f50] bg-[#f50]"
+                      className="relative h-[60px] w-[60px] rounded-full border-[#f50] bg-[#f50] outline-none"
                     >
-                      {playing ? (
-                        <img
-                          className="absolute left-2/4 top-2/4 h-3/5 w-2/5 -translate-x-2/4 -translate-y-2/4"
-                          src={icon.pause}
-                          alt=""
-                        />
-                      ) : (
-                        <img
-                          className="absolute left-2/4 top-2/4 h-3/5 w-2/5 -translate-x-2/4 -translate-y-2/4"
-                          src={icon.playTrack}
-                          alt=""
-                        />
-                      )}
+                      <img
+                        className="absolute left-2/4 top-2/4 h-3/5 w-2/5 -translate-x-2/4 -translate-y-2/4"
+                        src={isPlaying ? icon.pause : icon.playTrack}
+                        alt="pause/play"
+                      />
                     </button>
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -172,14 +130,19 @@ function Home() {
                   </div>
                 </div>
                 <div className="mt-7 text-white">
-                  <span>{moment(trackDetail?.createdAt).fromNow()}</span>
+                  <span>{formattedTime}</span>
                 </div>
               </div>
               <div className="ml-[30px] flex items-center">
                 <div className="h-4 w-[26px] bg-black p-[2px] text-[10px] text-red-700">
                   <span>{formatTime(currentTime)}</span>
                 </div>
-                <div id="waveform" className="" ref={waveformRef}></div>
+                <div
+                  id="waveform"
+                  className=""
+                  ref={waveformRefHome}
+                  onClick={handleClickOnWaveform}
+                ></div>
                 <div className="h-4 bg-black p-[2px] text-[10px] text-[#999]">
                   <span>{formatTime(duration)}</span>
                 </div>

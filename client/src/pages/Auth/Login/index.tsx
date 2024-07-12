@@ -2,11 +2,13 @@ import { useState, FormEvent } from "react";
 
 import icon from "~/assets/img/icon";
 import { fetchPost } from "~/Api";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const { mutate } = fetchPost();
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -17,7 +19,15 @@ function Login() {
       password,
     };
 
-    mutate({ url: "/auth/login", data });
+    mutate(
+      { url: "/auth/login", data },
+      {
+        onSuccess: () => {
+          toast.success("Login successful!");
+          navigate("/");
+        },
+      },
+    );
   }
 
   return (

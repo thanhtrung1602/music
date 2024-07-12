@@ -14,10 +14,12 @@ import { Wrapper as PopperWrapper } from "~/components/Popper";
 import { IComment } from "~/types/comment";
 import { ITrack } from "~/types/track";
 import { FetchDelete } from "~/Api/FetchPost";
-// import Button from "~/components/Button";
+import { useDispatch } from "react-redux";
+import { togglePlaylist } from "~/Redux/actions";
 
 function Comment() {
   const u = useContext(CookieUser);
+  const dispatch = useDispatch();
   const { id } = useParams();
   const user = useContext(CookieUser);
   const [trackDetail, setTrackDetail] = useState<ITrack | null>(null);
@@ -32,12 +34,15 @@ function Comment() {
     const saved = localStorage.getItem("followedUsers");
     return saved ? JSON.parse(saved) : [];
   });
+  const queryClient = useQueryClient();
 
   const { mutate } = fetchPost();
   const { mutate: liked } = fetchPost();
   const { mutate: unLike } = FetchDelete();
-
+  const { mutate: followed } = fetchPost();
+  const { mutate: unFollow } = FetchDelete();
   const { data: track } = fetchId("/tracks/getOneTrack/", Number(id));
+
   const { data: comments } = fetchId(
     "/comments/getAllCommentTrack/",
     Number(id),
@@ -48,6 +53,9 @@ function Comment() {
   );
   const { data: countTrack } = fetchId("/tracks/getAllLikeTrack/", Number(id));
   const countLikeTrack = countTrack?.getAllLikeTrack;
+  const { data: listen } = fetchId("/tracks/countListen/", Number(id));
+
+  const listenCount = listen?.count?.listen_count;
 
   const handleLikeTrack = (user_id: number, track_id: number) => {
     const data = {
@@ -69,7 +77,6 @@ function Comment() {
     );
   };
 
-  const queryClient = useQueryClient();
   const handleComment = (e: React.FormEvent) => {
     e.preventDefault();
     const user_id = user?.id;
@@ -115,12 +122,6 @@ function Comment() {
     );
   };
 
-  // const u = useContext(CookieUser);
-
-  const { mutate: followed } = fetchPost();
-  const { mutate: unFollow } = FetchDelete();
-
-  // const queryClient = useQueryClient();
   const handleFollow = (followerId: number, followingId: number) => {
     const data = { followerId, followingId };
     followed(
@@ -182,6 +183,10 @@ function Comment() {
   const paragraphs: string[] | undefined = trackDetail?.description
     ? trackDetail.description.split("\n")
     : undefined;
+
+  const handleTogglePlaylist = () => {
+    dispatch(togglePlaylist(Number(id)));
+  };
 
   return (
     <section className="float-left border-r border-[#f2f2f2] pr-[30px]">
@@ -263,7 +268,10 @@ function Comment() {
                 <img src={icon.cpLink} alt="" />
                 <span>Copy Link</span>
               </button>
-              <button className="flex items-center gap-2 rounded border border-[#e5e5e5] py-[2px] pl-[10px] pr-3 text-sm text-[#333]">
+              <button
+                onClick={handleTogglePlaylist}
+                className="flex items-center gap-2 rounded border border-[#e5e5e5] py-[2px] pl-[10px] pr-3 text-sm text-[#333]"
+              >
                 <img src={icon.bardPlus} alt="" />
                 <span>Add to Playlist</span>
               </button>
@@ -271,7 +279,7 @@ function Comment() {
             <ul className="flex items-center gap-3">
               <li className="flex items-center gap-1 text-xs text-[#999]">
                 <img src={icon.play} alt="listening" />
-                <span>572k</span>
+                <span>{listenCount || 0}</span>
               </li>
               <li className="flex items-center gap-1 text-xs text-[#999]">
                 <img className="opacity-50" src={icon.heart} alt="Liked" />

@@ -221,6 +221,12 @@ async function getPlaylist(id) {
       where: {
         user_id: id,
       },
+      include: [
+        {
+          model: db.User,
+          as: "userData",
+        },
+      ],
     });
     return { getPlaylist };
   } catch (error) {
@@ -312,9 +318,9 @@ async function searchEveryThing(q) {
   return { users, tracks };
 }
 
-async function listen(track_id) {
+async function listen({ id }) {
   try {
-    const track = await db.Track.findByPk(track_id);
+    const track = await db.Track.findByPk(id);
     track.listen_count = track.listen_count + 1;
     await track.save();
     return track;
@@ -322,6 +328,38 @@ async function listen(track_id) {
     console.error("Error findByPk track:", error);
     throw error;
   }
+}
+
+async function amountListen(id) {
+  try {
+    const count = await db.Track.findOne({
+      where: {
+        id,
+      },
+      attributes: ["listen_count"],
+    });
+    return { count };
+  } catch (error) {
+    console.error("Error listen count track:", error);
+    throw error;
+  }
+}
+
+async function trackLike(id) {
+  try {
+    const track = await db.Like_track.findAll({
+      where: {
+        user_id: id,
+      },
+      include: [
+        {
+          model: db.Track,
+          as: "trackData",
+        },
+      ],
+    });
+    return { track };
+  } catch (error) {}
 }
 
 module.exports = {
@@ -344,4 +382,6 @@ module.exports = {
   getTrackGenre,
   searchEveryThing,
   listen,
+  amountListen,
+  trackLike,
 };

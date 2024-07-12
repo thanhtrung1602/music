@@ -3,7 +3,9 @@ const trackController = require("../app/controllers/TrackController.js");
 const uploadCloud = require("../config/cloudinary.js");
 const router = express.Router();
 
-router.post("/track/:trackId/listen", trackController.listen);
+router.get("/countListen/:id", trackController.countListen);
+
+router.post("/trackListen/", trackController.listen);
 
 router.get("/search/", trackController.search);
 
@@ -20,6 +22,8 @@ router.post("/createPlaylist", trackController.createPlaylist);
 router.post("/createAlbums", trackController.createAlbums);
 
 router.delete("/unLikeTrack/", trackController.unLikeTrack);
+
+router.get("/getAllTrackLike/:id", trackController.getAllTrackLike);
 
 router.post("/likeTrack/", trackController.likeTrack);
 

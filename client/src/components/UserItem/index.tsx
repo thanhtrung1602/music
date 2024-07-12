@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { fetchAll, fetchId, fetchPost } from "~/Api";
 import { FetchDelete } from "~/Api/FetchPost";
 import { CookieUser } from "~/Hooks/UserToken";
@@ -83,14 +83,14 @@ function UserItem() {
                     />
                   </div>
                 </div>
-                <Link to={"/profile/" + user.id} key={user.id}>
+                <NavLink to={"/profile/" + user.id} key={user.id}>
                   <div className="flex max-w-52 flex-1 flex-col">
                     <div>
                       <h3 className="text-[#333]">{user.username}</h3>
                     </div>
                     <MiniStart id={user.id} />
                   </div>
-                </Link>
+                </NavLink>
                 <div className="mb-[2px] mt-auto flex flex-1 justify-end">
                   {followedUsers.includes(user.id) ? (
                     <button

@@ -1,4 +1,3 @@
-const connect = require("../config/connect");
 const bcrypt = require("bcryptjs");
 const db = require("../models/index");
 const jwt = require("jsonwebtoken");
@@ -55,8 +54,6 @@ async function loginUser({ email, password }) {
       console.error("User not found");
       throw new Error("User not found");
     }
-    console.log(password);
-    console.log(user);
     const isCorrectPass = user && bcrypt.compareSync(password, user.password);
     //Authorization
 

@@ -1,74 +1,40 @@
-import { useState, useRef, useEffect } from "react";
-import WaveSurfer from "wavesurfer.js";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import icon from "~/assets/img/icon";
-import instance from "~/services/customize-axios";
+import useWaveform from "~/components/waveform";
 import { ITrack } from "~/types/track";
+import instance from "~/services/customize-axios";
 
 function Footer() {
-  const waveformRef = useRef<HTMLDivElement>(null);
   const [trackDetail, setTrackDetail] = useState<ITrack | null>(null);
-  const waveSurFer = useRef<WaveSurfer | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const waveformRefFooter = useRef<HTMLDivElement>(null);
+  const idTrack = localStorage.getItem("idTrack");
+  const getCurrentTime = localStorage.getItem("currentTime");
+  const id = idTrack ? Number(idTrack) : NaN;
+  const currentTime = getCurrentTime ? parseFloat(getCurrentTime) : NaN;
 
   useEffect(() => {
-    instance.get(`/tracks/getOneTrack/${1}`).then((res) => {
+    instance.get(`/tracks/getOneTrack/${id}`).then((res) => {
       setTrackDetail(res.data.getOneTrack);
     });
-  }, [1]);
+  }, [id, setTrackDetail]);
 
-  useEffect(() => {
-    const handleReady = () => {
-      setDuration(waveSurFer.current?.getDuration() ?? 0);
-    };
+  const wave = useMemo(
+    () => ({
+      wc: "#cccccc",
+      pc: "#f50",
+      w: 512,
+      h: 1,
+    }),
+    [],
+  );
 
-    const handleAudioProcess = () => {
-      setCurrentTime(waveSurFer.current?.getCurrentTime() ?? 0);
-    };
-
-    const handleFinish = () => {
-      setPlaying(false);
-      waveSurFer.current?.play();
-      setPlaying(true);
-    };
-
-    if (waveformRef.current && trackDetail?.sound) {
-      waveSurFer.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "#cccccc",
-        progressColor: "#f50",
-        dragToSeek: true,
-        width: 512,
-        height: 1,
-      });
-
-      waveSurFer.current.load(trackDetail.sound);
-      waveSurFer.current.on("ready", handleReady);
-      waveSurFer.current.on("audioprocess", handleAudioProcess);
-      waveSurFer.current.on("finish", handleFinish);
-    }
-
-    return () => {
-      if (waveSurFer.current) {
-        waveSurFer.current.un("audioprocess", handleAudioProcess);
-        waveSurFer.current.un("finish", handleFinish);
-        waveSurFer.current.destroy();
-        setPlaying(false);
-      }
-    };
-  }, [trackDetail, 1]);
-
-  const handlePlayPause = () => {
-    if (waveSurFer.current) {
-      if (playing) {
-        waveSurFer.current.pause();
-      } else {
-        waveSurFer.current.play();
-      }
-      setPlaying(!playing);
-    }
-  };
+  const { isPlaying, duration, handlePlayPause, handleClickOnWaveform } =
+    useWaveform({
+      waveformRef: waveformRefFooter,
+      id,
+      wave,
+    });
 
   const formatTime = (time: number) => {
     let min: number | string = Math.floor(time / 60);
@@ -83,57 +49,46 @@ function Footer() {
   };
 
   return (
-    <div className="fixed bottom-0 flex h-12 w-full items-center justify-center border-t border-[#cecece] bg-[#f2f2f2]">
-      <div className="mt-3 flex w-[1258px] items-center justify-center gap-3">
+    <div className="fixed bottom-0 z-50 flex h-12 w-full items-center justify-center border-t border-[#cecece] bg-[#f2f2f2]">
+      <div className="mt-3 flex w-[1519.2px] items-center justify-center gap-9 leading-3">
         <div className="flex items-center gap-5">
           <button>
             <img src={icon.skipLeft} alt="" />
           </button>
           <button onClick={handlePlayPause}>
-            <img src={icon.playBold} alt="" />
+            <img src={isPlaying ? icon.pauseBold : icon.playBold} alt="" />
           </button>
           <button>
             <img src={icon.skipRight} alt="" />
           </button>
-          <button>
-            <img src={icon.repeatTrack} alt="" />
-          </button>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-[26px]p-[2px] h-4 text-[10px] text-[#ff5500]">
-            <span>{formatTime(currentTime)}</span>
+          <div className="h-4 w-[26px] p-[2px] text-[10px] text-[#ff5500]">
+            <span className="w-5">{formatTime(currentTime)}</span>
           </div>
-          <div id="waveform" className="" ref={waveformRef}></div>
+          <div
+            id="waveform"
+            className=""
+            ref={waveformRefFooter}
+            onClick={handleClickOnWaveform}
+          ></div>
           <div className="h-4 p-[2px] text-[10px] text-[#ff5500]">
             <span>{formatTime(duration)}</span>
           </div>
         </div>
-        <div>
-          <img src={icon.volume} alt="" />
-        </div>
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex w-[350px] items-center gap-2">
             <div>
               <img
                 className="h-[30px] w-[30px]"
-                src="https://res.cloudinary.com/dxuknuxer/image/upload/v1719574841/sound/nhunao.jpg"
+                src={trackDetail?.image}
                 alt=""
               />
             </div>
             <div className="flex flex-col text-[#333]">
-              <span className="text-xs">Wxrdie</span>
-              <span className="text-xs">
-                Như Nào Cũng Được! [Prod. by Machiot]
-              </span>
+              <span className="text-xs">{trackDetail?.userData?.username}</span>
+              <span className="text-xs">{trackDetail?.track_name}</span>
             </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <button>
-              <img src={icon.heart} alt="" />
-            </button>
-            <button>
-              <img src={icon.userPlusB} alt="" />
-            </button>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import { CookieUser } from "~/Hooks/UserToken";
 import { fetchPost } from "~/Api";
 import icon from "~/assets/img/icon";
+import toast from "react-hot-toast";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -13,12 +14,12 @@ function Upload() {
   const [sound, setSound] = useState<File | null>(null);
   const [track_name, setTrack_name] = useState("");
   const [genre_id, setGenre_id] = useState("");
-  const [description, setDescripton] = useState("");
+  const [description, setDescription] = useState("");
   const { mutate: post } = fetchPost();
 
   useEffect(() => {
     return () => {
-      imgTrack && URL.revokeObjectURL(imgTrack?.preview);
+      imgTrack && URL.revokeObjectURL(imgTrack.preview);
     };
   }, [imgTrack]);
   const handleImgTrack = (e: FormEvent) => {
@@ -28,24 +29,26 @@ function Upload() {
   };
 
   const handleUploadTrack = () => {
-    if ((sound, imgTrack, u?.id)) {
+    if (sound && imgTrack && u?.id) {
       const formData = new FormData();
+      const id = u.id;
       formData.append("image", imgTrack);
       formData.append("sound", sound);
       formData.append("track_name", track_name);
       formData.append("genre_id", genre_id);
       formData.append("description", description);
-      formData.append("user_id", u?.id);
+      formData.append("user_id", id.toString());
       console.log(formData);
       post(
         { url: "/tracks/uploader", data: formData },
         {
           onSuccess: () => {
+            toast.success("upload track successful");
             setTrack_name("");
             setImgTrack(null);
             setSound(null);
             setGenre_id("");
-            setDescripton("");
+            setDescription("");
           },
         },
       );
@@ -78,7 +81,7 @@ function Upload() {
             <input
               className="text-xs"
               type="file"
-              onChange={(e) => setSound(e.target?.files[0])}
+              onChange={(e) => setSound(e.target.files[0])}
               accept="audio/mp3"
               name=""
               id="idSound"
@@ -135,7 +138,7 @@ function Upload() {
               className="h-[130px] w-full rounded border px-2 py-[2px] text-sm"
               placeholder="Describe your track"
               value={description}
-              onChange={(e) => setDescripton(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               id=""
             ></textarea>
           </div>

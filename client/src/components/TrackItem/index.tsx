@@ -1,39 +1,46 @@
-import { Link } from "react-router-dom";
-import { fetchAll, fetchId } from "~/Api";
+import { useContext } from "react";
+import { NavLink } from "react-router-dom";
+import { fetchId } from "~/Api";
+import { CookieUser } from "~/Hooks/UserToken";
 import icon from "~/assets/img/icon";
-import { Shuffle } from "~/logic";
+// import { Shuffle } from "~/logic";
 import { ITrack } from "~/types/track";
 
+type Like = {
+  id: number;
+  trackData: ITrack;
+};
+
 function TrackItem() {
-  const { data: tracks } = fetchAll("/tracks/getAllTrack");
-  const track = tracks?.getAllTrack;
-  const shuffleTrack: ITrack[] = Shuffle(track);
+  const u = useContext(CookieUser);
+  const { data: tracks } = fetchId("/tracks/getAllTrackLike/", Number(u?.id));
+  const track: Like[] = tracks?.track;
   return (
     <div>
-      {shuffleTrack &&
-        shuffleTrack.slice(0, 3).map((t) => (
-          <Link to={"/detail/" + t.id} key={t.id}>
+      {track &&
+        track.slice(0, 3).map((t) => (
+          <NavLink to={"/detail/" + t.trackData.id} key={t.id}>
             <div className="mt-3 flex items-center">
               <div className="">
                 <div className="h-[65px] w-[65px] px-[6px] py-[5px]">
                   <img
                     className="h-full w-full object-cover"
-                    src={t.image || t.userData?.image}
-                    alt={t.track_name}
+                    src={t.trackData.image || t.trackData.userData?.image}
+                    alt={t.trackData.track_name}
                   />
                 </div>
               </div>
               <div className="ml-2 w-[250px]">
                 <div className="text-sm text-[#999]">
-                  <span>{t.userData?.username}</span>
+                  <span>{t.trackData.userData?.username}</span>
                 </div>
                 <div className="m-[2px] text-sm text-[#333]">
-                  <p className="w-full truncate">{t.track_name}</p>
+                  <p className="w-full truncate">{t.trackData.track_name}</p>
                 </div>
                 <InfUser id={t.id} />
               </div>
             </div>
-          </Link>
+          </NavLink>
         ))}
     </div>
   );

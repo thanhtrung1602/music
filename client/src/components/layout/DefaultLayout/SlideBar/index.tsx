@@ -3,7 +3,6 @@ import TrackItem from "~/components/TrackItem";
 import UserItem from "~/components/UserItem";
 import TitleItem from "~/components/TitleItem";
 function SlideBar() {
-  console.log(3);
   return (
     <div className="float-right w-[350px] pl-7">
       <TitleItem
@@ -15,7 +14,7 @@ function SlideBar() {
       <UserItem />
       <TitleItem
         icon={icon.heartBlur}
-        title_left={`${7} likes`}
+        title_left={` likes`}
         title_right={"View all"}
       />
       <TrackItem />

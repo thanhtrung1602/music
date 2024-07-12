@@ -251,13 +251,41 @@ class TrackController {
   }
 
   async listen(req, res) {
-    const trackId = req.params.trackId;
+    const id = req.body;
     try {
-      if (!trackId) {
+      if (!id) {
         return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
       }
-      const listen = await trackService.listen(trackId);
+      const listen = await trackService.listen(req.body);
       return res.status(200).json(listen);
+    } catch (error) {
+      console.error(">>> co loi ", error);
+      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
+    }
+  }
+
+  async countListen(req, res) {
+    const id = req.params.id;
+    try {
+      if (!id) {
+        return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
+      }
+      const listen = await trackService.amountListen(id);
+      return res.status(200).json(listen);
+    } catch (error) {
+      console.error(">>> co loi ", error);
+      return res.status(500).json({ Error: ">>> co loi ", err: error.message });
+    }
+  }
+
+  async getAllTrackLike(req, res) {
+    const id = req.params.id;
+    try {
+      if (!id) {
+        return res.status(400).json({ EM: "missing", EC: "-1", DT: "" });
+      }
+      const track = await trackService.trackLike(id);
+      return res.status(200).json(track);
     } catch (error) {
       console.error(">>> co loi ", error);
       return res.status(500).json({ Error: ">>> co loi ", err: error.message });
