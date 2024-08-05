@@ -163,9 +163,8 @@ function Header() {
           >
             <img
               src={
-                user
-                  ? user.image
-                  : "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+                user?.image ||
+                "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
               }
               className="w-6 rounded-full"
               alt=""

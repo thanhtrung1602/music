@@ -1,12 +1,19 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { CookieUser } from "~/Hooks/UserToken";
-import { fetchPost } from "~/Api";
+import { fetchAll, fetchPost } from "~/Api";
 import icon from "~/assets/img/icon";
 import toast from "react-hot-toast";
 
 interface FileWithPreview extends File {
   preview?: string;
 }
+
+type Genre = {
+  id: number;
+  title: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 function Upload() {
   const u = useContext(CookieUser);
@@ -17,11 +24,18 @@ function Upload() {
   const [description, setDescription] = useState("");
   const { mutate: post } = fetchPost();
 
+  const {
+    data: genres,
+    isLoading: loading,
+    error: err,
+  } = fetchAll("/tracks/getGenre");
+
   useEffect(() => {
     return () => {
       imgTrack && URL.revokeObjectURL(imgTrack.preview);
     };
   }, [imgTrack]);
+
   const handleImgTrack = (e: FormEvent) => {
     const file = e.target?.files[0];
     file.preview = URL.createObjectURL(file);
@@ -54,6 +68,9 @@ function Upload() {
       );
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (err) return <div>Error: {err.message}</div>;
 
   return (
     <div className="flex items-center justify-center">
@@ -113,9 +130,12 @@ function Upload() {
               <option selected value="">
                 none
               </option>
-              <option value="1">Hip-hop & Rap</option>
-              <option value="2">Dance & EDM</option>
-              <option value="Ballad">Ballad</option>
+              {genres &&
+                genres?.getGenre.map((genre: Genre) => (
+                  <option key={genre?.id} value={genre?.id}>
+                    {genre?.title}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="my-2.5 flex w-full flex-col gap-2">

@@ -66,7 +66,10 @@ function Profile() {
               <img
                 ref={imgRef}
                 className="flex h-[200px] w-[248px] items-center justify-center rounded-full"
-                src={user?.image}
+                src={
+                  user?.image ||
+                  "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+                }
                 alt={"avatar"}
               />
             </div>

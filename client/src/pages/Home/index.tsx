@@ -12,7 +12,6 @@ type Genre = {
 };
 
 function Home() {
-  console.log(1);
   const {
     data: genres,
     isLoading: loading,

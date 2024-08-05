@@ -322,7 +322,10 @@ function Comment() {
           <div className="flex w-[148px] flex-col gap-2">
             <img
               className="h-[120px] w-[120px] rounded-full"
-              src={trackDetail?.userData?.image}
+              src={
+                trackDetail?.userData?.image ||
+                "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+              }
               alt="avatar user"
             />
             <div className="flex flex-col gap-1">
